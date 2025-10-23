@@ -8,7 +8,7 @@ It showcases clean modular design, domain-driven structure, and strong build-tim
 
 ---
 
-## Prerequisites
+## 📝 Prerequisites
 
 * Java 25 (`sdk install java 25-librca`)
 * Java 25 native kit for native image (`sdk install java 25.r25-nik`)
@@ -34,7 +34,7 @@ It showcases clean modular design, domain-driven structure, and strong build-tim
 
 ---
 
-## Running the application
+## ▶️ Running the application
 
 * Run project with maven: `./mvnw clean install -Dmaven.test.skip && ./mvnw spring-boot:run -Prun-app -pl app`
 * Create executable JAR: `./mvnw clean install -Dmaven.test.skip`
