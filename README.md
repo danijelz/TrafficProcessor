@@ -73,9 +73,16 @@ The project follows a **multimodule layout** designed for scalability, separatio
 
 ```
 trafficprocessor/
-├── core/          # Core business logic (domain model, entities, and use cases)
-├── adapter/       # Persistence, Presentation and DevOps layers (DB, Kafka, Security, Observability ...)
-├── app/           # Main entry point (Spring Boot application)
+├── core/                # Core layer
+    ├── model/           # Domain model
+    ├── core/            # Core business logic
+├── adapter/             # Persistence, Presentation and DevOps layers
+    ├── kafka/           # Kafka connector
+    ├── persistence/     # Persistence modules
+        ├── dynamo/      # DynamoDB persistence layer
+        ├── jpa/         # JPA/PostgreSQL persistence layer
+├── app/                 # Main entry point (Spring Boot application)
+├── report/              # Aggregator of code coverage reports
 ```
 
 * 🧭 **Core** Domain model and logic — independent of frameworks or external systems.
