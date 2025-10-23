@@ -1,0 +1,14 @@
+services:
+  trafic-processor-app:
+    image: cr.demo.com/demo/trafic-processor-app:0.0.1-SNAPSHOT
+    container_name: trafic-processor-app
+    network_mode: host
+    profiles: [devlocal]
+    environment:
+      - SPRING_PROFILES_ACTIVE=devlocal
+      - SPRING_DATASOURCE_USERNAME=demo
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/demodb
+    ports:
+      - 8080:8080
+      - 8081:8081

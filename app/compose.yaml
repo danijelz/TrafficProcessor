@@ -1,0 +1,6 @@
+include:
+  - ../adapter/persistence/jpa/compose-persistence-jpa.yaml
+  - ../adapter/persistence/dynamo/compose-persistence-dynamo.yaml
+  - ../adapter/devops/observability/compose-observability.yaml
+  - ../adapter/devops/security-oauth/compose-security-oauth.yaml
+  - ../adapter/kafka/compose-kafka.yaml

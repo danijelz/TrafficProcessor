@@ -1,0 +1,55 @@
+{ 
+  "realm" :  "demorealm" , 
+  "enabled" :  true , 
+  "users" :  [ 
+    { 
+      "username" :  "demoadmin" , 
+      "enabled" :  true , 
+      "emailVerified" :  true , 
+      "email" : "admin@example.org",
+      "firstName": "Admin",
+      "lastName": "Admin",
+      "credentials" :  [ 
+        { 
+          "type" :  "password" , 
+          "value" :  "admin123" 
+        } 
+      ] , 
+      "realmRoles" :  [ "admin" ] 
+    } , 
+    { 
+      "username" :  "demo" , 
+      "enabled" :  true , 
+      "emailVerified" :  true ,
+      "email" : "demo@example.org",
+      "firstName": "Demo",
+      "lastName": "Demo",
+      "credentials" :  [ 
+        { 
+          "type" :  "password" , 
+          "value" :  "demo" 
+        } 
+      ] , 
+      "realmRoles" :  [ "user" ] 
+    } 
+  ] , 
+  "roles" :  { 
+    "realm" :  [ 
+      { 
+        "name" :  "admin" 
+      } , 
+      { 
+        "name" :  "user" 
+      } 
+    ] 
+  } , 
+  "clients" :  [ 
+    { 
+      "clientId" :  "democlient" , 
+      "publicClient" :  true , 
+      "redirectUris" :  [ "*" ] , 
+      "directAccessGrantsEnabled" :  true,
+      "implicitFlowEnabled" : true
+     } 
+  ] 
+}

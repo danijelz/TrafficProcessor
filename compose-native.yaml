@@ -1,0 +1,29 @@
+include:
+  - ./app/compose.yaml
+
+services:
+  trafic-processor-app:
+    image: cr.demo.com/demo/trafic-processor-app-native:0.0.1-SNAPSHOT
+    container_name: demo-app
+    network_mode: host
+    profiles: [devlocal]
+    environment:
+      - SPRING_PROFILES_ACTIVE=devlocal
+      - SPRING_DATASOURCE_USERNAME=demo
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/demodb
+    depends_on:
+      postgres:
+        condition: service_started
+      localstack:
+        condition: service_started
+      keycloak:
+        condition: service_started
+      grafana:
+        condition: service_started
+      loki:
+        condition: service_started
+      tempo:
+        condition: service_started
+      prometheus:
+        condition: service_started

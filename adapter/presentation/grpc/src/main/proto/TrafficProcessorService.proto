@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package trafficprocessor;
+import  "TrafficProcessorModel.proto";
+import "google/protobuf/wrappers.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.traficprocessor.adapter.presentation.grpc.api";
+option java_outer_classname = "GrpcTrafficProcessorApi";
+
+service GrpcTrafficProcessorService {
+  rpc processTrafficEvent (trafficprocessor.GrpcTrafficEvent) returns (google.protobuf.StringValue);
+
+  rpc retrieveTrafficEvent (google.protobuf.StringValue) returns (trafficprocessor.GrpcRecordedTrafficEvent);
+  
+  rpc retrieveTrafficStats (trafficprocessor.GrpcTrafficStatsRequest) returns (trafficprocessor.GrpcTrafficStats);
+}

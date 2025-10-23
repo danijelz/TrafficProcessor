@@ -1,0 +1,48 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    profiles: [devlocal]
+    command:
+      - --enable-feature=exemplar-storage
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  tempo:
+    image: grafana/tempo
+    container_name: tempo
+    profiles: [devlocal]
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./docker/tempo/tempo.yml:/etc/tempo.yaml:ro
+    ports:
+      - 3200:3200 # Tempo
+      - 9411:9411 # zipkin
+
+  loki:
+    image: grafana/loki:main
+    container_name: loki
+    profiles: [devlocal]
+    command: [ "-config.file=/etc/loki/local-config.yaml" ]
+    ports:
+      - 3100:3100
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    profiles: [devlocal]
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true

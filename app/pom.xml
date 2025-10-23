@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.example</groupId>
+		<artifactId>trafic-processor</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>trafic-processor-app</artifactId>
+	<name>Application</name>
+	<description>Trafic Processor application.</description>
+
+	<dependencies>
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-docker-compose</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+
+		<!-- Cache -->
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+		</dependency>
+
+		<!--Test-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.awspring.cloud</groupId>
+			<artifactId>spring-cloud-aws-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>localstack</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>kafka</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.instancio</groupId>
+			<artifactId>instancio-junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-core-model</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.grpc</groupId>
+			<artifactId>spring-grpc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Benchmark -->
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-generator-annprocess</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!--Trafic Processor-->
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-core-domain</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-kafka</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-persistence-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-persistence-dynamo</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-presentation-rest</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-presentation-rest</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-presentation-grpc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-devops-observability</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-devops-security-oauth</artifactId>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>run-app</id>
+
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<profiles>devlocal</profiles>
+						</configuration>
+						<executions>
+							<execution>
+								<id>process-aot</id>
+								<goals>
+									<goal>process-aot</goal>
+								</goals>
+							</execution>
+							<execution>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+								<configuration>
+									<mainClass>
+										com.example.traficprocessor.app.TrafficProcessorApplication</mainClass>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<excludedGroups>BenchmarkTest</excludedGroups>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>build-oci-image</id>
+
+			<properties>
+				<target.image.name>
+					${container.image.registry}/${container.image.group}/${project.artifactId}:${container.image.tag}
+				</target.image.name>
+			</properties>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>process-aot</id>
+								<goals>
+									<goal>process-aot</goal>
+								</goals>
+							</execution>
+
+							<execution>
+								<id>build-oci-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build-image-no-fork</goal>
+								</goals>
+								<configuration>
+									<mainClass>
+										com.example.traficprocessor.app.TrafficProcessorApplication</mainClass>
+									<image>
+										<name>${target.image.name}</name>
+										<createdDate>${container.image.timestamp}</createdDate>
+										<builder>paketobuildpacks/builder-jammy-java-tiny:latest</builder>
+										<imagePlatform>linux/amd64</imagePlatform>
+										<cleanCache>true</cleanCache>
+										<publish>${container.image.publish}</publish>
+										<env>
+											<BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+											<BP_SPRING_AOT_ENABLED>true</BP_SPRING_AOT_ENABLED>
+											<BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
+											<BPE_APPEND_JAVA_TOOL_OPTIONS>
+												-XX:MaxMetaspaceSize=256M
+												-XX:MaxDirectMemorySize=128M
+											</BPE_APPEND_JAVA_TOOL_OPTIONS>
+										</env>
+										<buildCache>
+											<volume>
+												<name>${buildpack.buildCache.name}</name>
+											</volume>
+										</buildCache>
+										<launchCache>
+											<volume>
+												<name>${buildpack.launchCache.name}</name>
+											</volume>
+										</launchCache>
+									</image>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>build-native-oci-image</id>
+
+			<properties>
+				<target.image.name>
+					${container.image.registry}/${container.image.group}/${project.artifactId}-native:${container.image.tag}
+				</target.image.name>
+			</properties>
+
+			<dependencies>
+				<dependency>
+					<groupId>com.github.eciuca</groupId>
+					<artifactId>dynamodb-enhanced-native-image-substitutions</artifactId>
+				</dependency>
+			</dependencies>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<archive>
+								<manifestEntries>
+									<Spring-Boot-Native-Processed>true</Spring-Boot-Native-Processed>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>process-aot</id>
+								<goals>
+									<goal>process-aot</goal>
+								</goals>
+							</execution>
+
+							<execution>
+								<id>build-oci-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build-image</goal>
+								</goals>
+								<configuration>
+									<mainClass>
+										com.example.traficprocessor.app.TrafficProcessorApplication</mainClass>
+									<image>
+										<name>${target.image.name}</name>
+										<createdDate>${container.image.timestamp}</createdDate>
+										<builder>paketobuildpacks/builder-jammy-java-tiny:latest</builder>
+										<imagePlatform>linux/amd64</imagePlatform>
+										<cleanCache>true</cleanCache>
+										<publish>${container.image.publish}</publish>
+										<env>
+											<BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+											<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+											<BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+												--features=com.github.eciuca.awssdk.dynamodb.DynamoDbEnhancedNativeImageSubstitutions
+											</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+											<BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
+											<BPE_APPEND_JAVA_TOOL_OPTIONS>
+												-XX:MaxMetaspaceSize=256M
+												-XX:MaxDirectMemorySize=128M
+											</BPE_APPEND_JAVA_TOOL_OPTIONS>
+										</env>
+										<buildCache>
+											<volume>
+												<name>${buildpack.buildCache.name}</name>
+											</volume>
+										</buildCache>
+										<launchCache>
+											<volume>
+												<name>${buildpack.launchCache.name}</name>
+											</volume>
+										</launchCache>
+									</image>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.graalvm.buildtools</groupId>
+						<artifactId>native-maven-plugin</artifactId>
+						<configuration>
+							<classesDirectory>${project.build.outputDirectory}</classesDirectory>
+							<metadataRepository>
+								<enabled>true</enabled>
+							</metadataRepository>
+						</configuration>
+						<executions>
+							<execution>
+								<id>add-reachability-metadata</id>
+								<goals>
+									<goal>add-reachability-metadata</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>build-native-app</id>
+
+			<dependencies>
+				<dependency>
+					<groupId>com.github.eciuca</groupId>
+					<artifactId>dynamodb-enhanced-native-image-substitutions</artifactId>
+				</dependency>
+			</dependencies>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>process-aot</id>
+								<goals>
+									<goal>process-aot</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.graalvm.buildtools</groupId>
+						<artifactId>native-maven-plugin</artifactId>
+						<configuration>
+							<quickBuild>true</quickBuild>
+							<classesDirectory>${project.build.outputDirectory}</classesDirectory>
+							<metadataRepository>
+								<enabled>true</enabled>
+							</metadataRepository>
+							<buildArgs>
+								<buildArg>
+									--features=com.github.eciuca.awssdk.dynamodb.DynamoDbEnhancedNativeImageSubstitutions
+								</buildArg>
+							</buildArgs>
+						</configuration>
+						<executions>
+							<execution>
+								<id>add-reachability-metadata</id>
+								<goals>
+									<goal>add-reachability-metadata</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>build-native</id>
+								<goals>
+									<goal>build</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>test-native-app</id>
+
+			<dependencies>
+				<dependency>
+					<groupId>org.junit.platform</groupId>
+					<artifactId>junit-platform-launcher</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.openjdk.jmh</groupId>
+									<artifactId>jmh-generator-annprocess</artifactId>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>process-test-aot</id>
+								<goals>
+									<goal>process-test-aot</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.graalvm.buildtools</groupId>
+						<artifactId>native-maven-plugin</artifactId>
+						<extensions>true</extensions>
+						<configuration>
+							<quickBuild>true</quickBuild>
+							<classesDirectory>${project.build.outputDirectory}</classesDirectory>
+							<metadataRepository>
+								<enabled>true</enabled>
+							</metadataRepository>
+						</configuration>
+						<executions>
+							<execution>
+								<id>add-reachability-metadata</id>
+								<goals>
+									<goal>add-reachability-metadata</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>native-test</id>
+								<goals>
+									<goal>test</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>benchmark</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.openjdk.jmh</groupId>
+									<artifactId>jmh-generator-annprocess</artifactId>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<groups>BenchmarkTest</groups>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    profiles: [devlocal]
+    environment:
+      - POSTGRES_DB=demodb
+      - POSTGRES_USER=demo
+      - POSTGRES_PASSWORD=secret
+    ports:
+      - 5432:5432

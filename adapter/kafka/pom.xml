@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.example</groupId>
+		<artifactId>trafic-processor-adapter</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>trafic-processor-adapter-kafka</artifactId>
+	<name>Kafka</name>
+	<description>Kafka module.</description>
+
+	<dependencies>
+		<!-- Jackson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+
+		<!--Kafka streams-->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-streams</artifactId>
+		</dependency>
+
+		<!-- Trafic Processor -->
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-core-domain</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-spring-commons</artifactId>
+		</dependency>
+	</dependencies>
+</project>

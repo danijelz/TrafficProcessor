@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.example</groupId>
+	<artifactId>trafic-processor</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Trafic Processor</name>
+	<description>Trafic Processor root module.</description>
+
+	<modules>
+		<module>core</module>
+		<module>adapter</module>
+		<module>app</module>
+		<module>report</module>
+	</modules>
+
+	<properties>
+		<!-- Common -->
+		<java.version>25</java.version>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<protobuf-java.version>4.31.1</protobuf-java.version>
+		<grpc.version>1.74.0</grpc.version>
+
+		<!-- Dependency versions -->
+		<vavr.version>0.10.7</vavr.version>
+		<spring.boot.version>3.5.6</spring.boot.version>
+		<spring-grpc.version>0.11.0</spring-grpc.version>
+		<springdoc.version>2.8.13</springdoc.version>
+		<cloud.aws.version>3.4.0</cloud.aws.version>
+		<dynamodb.substitutions.version>2.32.7</dynamodb.substitutions.version>
+		<testcontainer.version>1.21.3</testcontainer.version>
+		<instancio.version>5.5.1</instancio.version>
+		<jmh.version>1.37</jmh.version>
+		<findbugs.version>3.0.2</findbugs.version>
+		<swagger-api.version>2.2.35</swagger-api.version>
+		<mockito.version>5.20.0</mockito.version>
+		<spotbugs.version>4.9.6</spotbugs.version>
+		<loki.logback.version>2.0.0</loki.logback.version>
+		<datasource.micrometer.version>1.2.0</datasource.micrometer.version>
+
+		<!-- Plugin versions -->
+		<compiler.plugin.version>3.14.0</compiler.plugin.version>
+		<deploy.plugin.version>3.1.4</deploy.plugin.version>
+		<release.plugin.version>3.1.1</release.plugin.version>
+		<surfire.plugin.version>3.5.4</surfire.plugin.version>
+		<jar.plugin.version>3.4.2</jar.plugin.version>
+		<enforcer.plugin.version>3.6.2</enforcer.plugin.version>
+		<protobuf.plugin.version>3.10.0</protobuf.plugin.version>
+		<versions.plugin.version>2.19.1</versions.plugin.version>
+		<native.plugin.version>0.11.1</native.plugin.version>
+		<jacoco.plugin.version>0.8.13</jacoco.plugin.version>
+		<dependencycheck.plugin.version>12.1.6</dependencycheck.plugin.version>
+		<sat.plugin.version>0.17.0</sat.plugin.version>
+		<spotbugs.plugin.version>4.9.6.0</spotbugs.plugin.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Common -->
+			<dependency>
+				<groupId>io.vavr</groupId>
+				<artifactId>vavr</artifactId>
+				<version>${vavr.version}</version>
+			</dependency>
+
+			<!-- Spring -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.grpc</groupId>
+				<artifactId>spring-grpc-dependencies</artifactId>
+				<version>${spring-grpc.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+				<version>${springdoc.version}</version>
+			</dependency>
+
+			<!-- AWS -->
+			<dependency>
+				<groupId>io.awspring.cloud</groupId>
+				<artifactId>spring-cloud-aws-dependencies</artifactId>
+				<version>${cloud.aws.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.eciuca</groupId>
+				<artifactId>dynamodb-enhanced-native-image-substitutions</artifactId>
+				<version>${dynamodb.substitutions.version}</version>
+			</dependency>
+
+			<!-- Test -->
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers</artifactId>
+				<version>${testcontainer.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${testcontainer.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.instancio</groupId>
+				<artifactId>instancio-junit</artifactId>
+				<version>${instancio.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- Benchmark -->
+			<dependency>
+				<groupId>org.openjdk.jmh</groupId>
+				<artifactId>jmh-core</artifactId>
+				<version>${jmh.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openjdk.jmh</groupId>
+				<artifactId>jmh-generator-annprocess</artifactId>
+				<version>${jmh.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Observability -->
+			<dependency>
+				<groupId>net.ttddyy.observation</groupId>
+				<artifactId>datasource-micrometer-spring-boot</artifactId>
+				<version>${datasource.micrometer.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.loki4j</groupId>
+				<artifactId>loki-logback-appender</artifactId>
+				<version>${loki.logback.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+
+			<!-- Static code analysis -->
+			<dependency>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs</artifactId>
+				<version>${spotbugs.version}</version>
+				<type>pom</type>
+			</dependency>
+
+			<!--Trafic Processor-->
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-core-model</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-core-model</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-core-domain</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-core-domain</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-spring-commons</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-kafka</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-persistence-jpa</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-persistence-dynamo</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-presentation-rest</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-presentation-rest</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-presentation-grpc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-devops-observability</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-adapter-devops-security-oauth</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>trafic-processor-app</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${compiler.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${deploy.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>${release.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${surfire.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${jar.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>${enforcer.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring.boot.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>io.github.ascopes</groupId>
+					<artifactId>protobuf-maven-plugin</artifactId>
+					<version>${protobuf.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>${versions.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.graalvm.buildtools</groupId>
+					<artifactId>native-maven-plugin</artifactId>
+					<version>${native.plugin.version}</version>
+					<extensions>true</extensions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.owasp</groupId>
+					<artifactId>dependency-check-maven</artifactId>
+					<version>${dependencycheck.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.openhab.tools.sat</groupId>
+					<artifactId>sat-plugin</artifactId>
+					<version>${sat.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>${spotbugs.plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<configuration>
+					<allowSnapshots>true</allowSnapshots>
+					<outputDirectory>${project.build.directory}/update-reports</outputDirectory>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>
+						-javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+						-Xshare:off
+					</argLine>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.mockito</groupId>
+						<artifactId>mockito-core</artifactId>
+						<version>${mockito.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>code-coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<argLine>
+								${argLine}
+								-javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+								-Xshare:off
+							</argLine>
+						</configuration>
+						<dependencies>
+							<dependency>
+								<groupId>org.mockito</groupId>
+								<artifactId>mockito-core</artifactId>
+								<version>${mockito.version}</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<formats>
+										<format>HTML</format>
+									</formats>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>find_dependency_vulnerabilities</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.owasp</groupId>
+						<artifactId>dependency-check-maven</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>aggregate</goal>
+								</goals>
+								<configuration>
+									<name>dependency-check-report.html</name>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>static_code_analysis</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.openhab.tools.sat</groupId>
+							<artifactId>sat-plugin</artifactId>
+							<version>${sat.plugin.version}</version>
+							<executions>
+								<execution>
+									<phase>verify</phase>
+									<goals>
+										<goal>pmd</goal>
+										<goal>spotbugs</goal>
+										<goal>report</goal>
+									</goals>
+								</execution>
+							</executions>
+							<configuration>
+								<spotbugsMavenPluginVersion>${spotbugs.plugin.version}</spotbugsMavenPluginVersion>
+								<spotBugsVersion>${spotbugs.version}</spotBugsVersion>
+								<failOnError>false</failOnError>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+
+		<profile>
+			<id>check-bundles</id>
+			<activation>
+				<file>
+					<exists>src</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.openhab.tools.sat</groupId>
+						<artifactId>sat-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>

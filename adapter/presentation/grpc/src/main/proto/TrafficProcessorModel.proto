@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package trafficprocessor;
+
+option java_multiple_files = true;
+option java_package = "com.example.traficprocessor.adapter.presentation.grpc.model";
+option java_outer_classname = "GrpcTrafficProcessorModel";
+
+enum GrpcVehicleBrand {
+  VOLKSWAGEN = 0;
+  BMW = 1;
+  NISSAN = 2;
+  TOYOTA = 3;
+  FORD = 4;
+  HONDA = 5;
+  BYD = 6;
+  TESLA = 7;
+  HYUNDAI = 8;
+  OTHER = 9;
+}
+
+message GrpcTrafficEvent {
+  int32 tollStationId = 1;
+  string vehicleId = 2;
+  GrpcVehicleBrand vehicleBrand = 3;
+  int64 timestamp = 4;
+}
+
+message GrpcRecordedTrafficEvent {
+  string id = 1;
+  int32 tollStationId = 2;
+  string vehicleId = 3;
+  GrpcVehicleBrand vehicleBrand = 4;
+  int64 timestamp = 5;
+}
+
+message GrpcVehicleBrandTrafficStats {
+  GrpcVehicleBrand vehicleBrand = 1;
+  int64 numberOfCountedVehicles = 2;
+}
+
+message GrpcYearMonth {
+  int32 year = 1;
+  int32 month = 2;
+}
+
+message GrpcTrafficStatsRequest {
+  GrpcYearMonth timeWindowFrom = 1;
+  optional GrpcYearMonth timeWindowTo = 2;
+}
+
+message GrpcTrafficStats {
+  GrpcYearMonth timeWindowFrom = 1;
+  GrpcYearMonth timeWindowTo = 2;
+  repeated GrpcVehicleBrandTrafficStats vehicleBrandTrafficStats = 3;
+}
