@@ -5,7 +5,9 @@ import static org.apache.kafka.streams.state.Stores.persistentWindowStore;
 import static org.apache.kafka.streams.state.Stores.windowStoreBuilder;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.example.traficprocessor.adapter.kafka.observability.KafkaListenerTracer;
 import com.example.traficprocessor.core.domain.TrafficProcessorService;
+import io.micrometer.observation.ObservationRegistry;
 import java.time.Duration;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
@@ -20,12 +22,15 @@ import org.apache.kafka.streams.state.WindowStoreIterator;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
 @EnableKafkaStreams
@@ -41,6 +46,15 @@ public class KafkaConfig {
 
   public KafkaConfig(TrafficProcessorService trafficProcessorService) {
     this.trafficProcessorService = trafficProcessorService;
+  }
+
+  @Bean
+  ConcurrentKafkaListenerContainerFactory<String, KafkaTrafficEvent> listenerFactory(
+      ConsumerFactory<String, KafkaTrafficEvent> consumerFactory) {
+    var factory = new ConcurrentKafkaListenerContainerFactory<String, KafkaTrafficEvent>();
+    factory.getContainerProperties().setObservationEnabled(true);
+    factory.setConsumerFactory(consumerFactory);
+    return factory;
   }
 
   @Bean
@@ -120,5 +134,14 @@ public class KafkaConfig {
           .of(WindowStoreIterator::hasNext)
           .getOrElse(false);
     }
+  }
+}
+
+@Configuration
+@ConditionalOnClass(ObservationRegistry.class)
+class KafkaListenerTracerConfig {
+  @Bean
+  KafkaListenerTracer kafkaListenerTracer(ObservationRegistry observationRegistry) {
+    return new KafkaListenerTracer(observationRegistry);
   }
 }
