@@ -84,7 +84,7 @@ trafficprocessor/
 
 ---
 
-### ⚙️ Additional Functionalities
+## ⚙️ Additional Functionalities
 
 This section provides useful developer commands for advanced workflows such as dependency management, benchmarking, code coverage, and gRPC testing.
 
