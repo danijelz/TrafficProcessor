@@ -122,6 +122,9 @@ Generate a code coverage report using the `code-coverage` profile:
 ./mvnw clean install -Pcode-coverage
 ```
 
+Coverage reports:
+* `./report/target/site/jacoco-aggregate/`
+
 ---
 
 #### 📡 Test gRPC Endpoints
@@ -191,7 +194,5 @@ export JAVA_HOME=$(sdk home java 25.r25-nik)
   -Dspring.datasource.password=secret \
   -Dspring.datasource.url=jdbc:postgresql://localhost:5432/demodb
 ```
-Coverage reports:
-* `./report/target/site/jacoco-aggregate/`
 
 
