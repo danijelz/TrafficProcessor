@@ -81,6 +81,9 @@ trafficprocessor/
     ├── persistence/     # Persistence modules
         ├── dynamo/      # DynamoDB persistence layer
         ├── jpa/         # JPA/PostgreSQL persistence layer
+    ├── presentation/    # Presentation modules
+        ├── grpc/        # gRPC API
+        ├── rest         # REST API
 ├── app/                 # Main entry point (Spring Boot application)
 ├── report/              # Aggregator of code coverage reports
 ```
