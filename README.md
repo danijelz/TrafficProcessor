@@ -33,6 +33,15 @@ It showcases clean modular design, domain-driven structure, and strong build-tim
 * Run project with maven: `./mvnw clean install -Dmaven.test.skip && ./mvnw spring-boot:run -Prun-app -pl app`
 * Create executable JAR: `./mvnw clean install -Dmaven.test.skip`
 
+### 🔐 Test Login Credentials
+
+For testing secured endpoints or accessing integrated services (e.g., via Keycloak-protected APIs):
+
+```
+Username: demo  
+Password: demo
+```
+
 ## 🚀 Available Services
 
 After starting the **TrafficProcessor** application, the following services are available locally:
@@ -46,5 +55,17 @@ After starting the **TrafficProcessor** application, the following services are 
 | **Kafka UI**                         | Interface for inspecting and managing Kafka topics and events     | [http://localhost:8083](http://localhost:8083) |
 
 
+### 🏗️ Project Structure
 
+The project follows a **multimodule layout** designed for scalability, separation of concerns, and reusability:
 
+```
+trafficprocessor/
+├── core/          # Core business logic (domain model, entities, and use cases)
+├── adapter/       # Persistence, Presentation and DevOps layers (DB, Kafka, Security, Observability ...)
+├── app/           # Main entry point (Spring Boot application)
+```
+
+🧭 **Core** Domain model and logic — independent of frameworks or external systems.
+🔌 **Adapter** Handles persistence, messaging and exposes external endpoints (REST/gRPC)
+🚀 **App** bootstraps the runtime environment and ties all modules together.
