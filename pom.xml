@@ -34,7 +34,7 @@
 		<springdoc.version>2.8.13</springdoc.version>
 		<cloud.aws.version>3.4.0</cloud.aws.version>
 		<dynamodb.substitutions.version>2.32.7</dynamodb.substitutions.version>
-		<testcontainer.version>1.21.3</testcontainer.version>
+		<testcontainers.version>1.21.3</testcontainers.version>
 		<instancio.version>5.5.1</instancio.version>
 		<jmh.version>1.37</jmh.version>
 		<findbugs.version>3.0.2</findbugs.version>
@@ -111,14 +111,14 @@
 			<dependency>
 				<groupId>org.testcontainers</groupId>
 				<artifactId>testcontainers</artifactId>
-				<version>${testcontainer.version}</version>
+				<version>${testcontainers.version}</version>
 				<scope>test</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.testcontainers</groupId>
 				<artifactId>junit-jupiter</artifactId>
-				<version>${testcontainer.version}</version>
+				<version>${testcontainers.version}</version>
 				<scope>test</scope>
 			</dependency>
 

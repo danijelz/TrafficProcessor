@@ -2,6 +2,9 @@ package com.example.traficprocessor.adapter.kafka;
 
 import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class KafkaTrafficEvent implements TrafficEvent {
   private int tollStationId;
@@ -19,6 +22,7 @@ public class KafkaTrafficEvent implements TrafficEvent {
     this.timestamp = timestamp;
   }
 
+  @Override
   public int getTollStationId() {
     return tollStationId;
   }
@@ -27,6 +31,8 @@ public class KafkaTrafficEvent implements TrafficEvent {
     this.tollStationId = tollStationId;
   }
 
+  @Override
+  @Size(min = 3)
   public String getVehicleId() {
     return vehicleId;
   }
@@ -35,6 +41,8 @@ public class KafkaTrafficEvent implements TrafficEvent {
     this.vehicleId = vehicleId;
   }
 
+  @Override
+  @NotNull
   public VehicleBrand getVehicleBrand() {
     return vehicleBrand;
   }
@@ -43,6 +51,8 @@ public class KafkaTrafficEvent implements TrafficEvent {
     this.vehicleBrand = vehicleBrand;
   }
 
+  @Min(0)
+  @Override
   public long getTimestamp() {
     return timestamp;
   }

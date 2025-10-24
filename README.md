@@ -73,25 +73,25 @@ After starting the **TrafficProcessor** application, the following services are 
 The project follows a **multimodule layout** designed for scalability, separation of concerns, and reusability:
 
 ```
-trafficprocessor/
-├── core/                # Core layer
-    ├── model/           # Domain model
-    ├── core/            # Core business logic
-├── adapter/             # Persistence, Presentation and DevOps layers
-    ├── kafka/           # Kafka connector
-    ├── persistence/     # Persistence modules
-        ├── dynamo/      # DynamoDB persistence layer
-        ├── jpa/         # JPA/PostgreSQL persistence layer
-    ├── presentation/    # Presentation modules
-        ├── grpc/        # gRPC API
-        ├── rest         # REST API
-├── app/                 # Main entry point (Spring Boot application)
-├── report/              # Aggregator of code coverage reports
+trafficprocessor
+├── core                # Core layer
+    ├── model           # Domain model
+    ├── core            # Core business logic
+├── adapter             # Persistence, Presentation and DevOps layers
+    ├── kafka           # Kafka connector
+    ├── persistence     # Persistence modules
+        ├── dynamo      # DynamoDB persistence layer
+        ├── jpa         # JPA/PostgreSQL persistence layer
+    ├── presentation    # Presentation modules
+        ├── grpc        # gRPC API
+        ├── rest        # REST API
+├── app                 # Main entry point (Spring Boot application)
+├── report              # Aggregator of code coverage reports
 ```
 
 * 🧭 **Core** Domain model and logic — independent of frameworks or external systems.
 * 🔌 **Adapter** Handles persistence, messaging and exposes external endpoints (REST/gRPC)
-* 🚀 **App** bootstraps the runtime environment and ties all modules together.
+* 🚀 **App** Bootstraps the runtime environment and ties all modules together.
 
 ---
 

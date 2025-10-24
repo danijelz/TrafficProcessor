@@ -3,6 +3,7 @@ package com.example.traficprocessor.adapter.presentation.rest.model;
 import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -55,6 +56,7 @@ public class RestTrafficEvent implements TrafficEvent {
     this.vehicleBrand = vehicleBrand;
   }
 
+  @Min(0)
   @Override
   @Schema(description = "TrafficEvent.timestamp description")
   public long getTimestamp() {

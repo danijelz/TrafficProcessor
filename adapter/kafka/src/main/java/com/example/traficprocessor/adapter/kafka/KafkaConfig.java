@@ -3,10 +3,12 @@ package com.example.traficprocessor.adapter.kafka;
 import static org.apache.kafka.streams.state.Stores.persistentWindowStore;
 import static org.apache.kafka.streams.state.Stores.windowStoreBuilder;
 import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.kafka.retrytopic.TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE;
 
 import com.example.traficprocessor.adapter.kafka.observability.KafkaListenerTracer;
 import com.example.traficprocessor.core.domain.TrafficProcessorService;
 import io.micrometer.observation.ObservationRegistry;
+import jakarta.validation.ValidationException;
 import java.time.Duration;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
@@ -22,30 +24,49 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.KafkaListenerConfigurer;
+import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistrar;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonSerde;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @EnableKafkaStreams
 @Configuration(proxyBeanMethods = false)
 @PropertySource("classpath:kafka.properties")
 @RegisterReflectionForBinding(LogAndContinueExceptionHandler.class)
-public class KafkaConfig {
+public class KafkaConfig implements KafkaListenerConfigurer {
   private static final Logger LOGGER = getLogger(KafkaConfig.class.getName() + ".KafkaListener");
-  private static final String DEDUPLICATED_TRAFFIC_EVENTS_TOPIC = "deduplicatedTrafficEvents";
-  private static final String DEDUPLICATION_STORE_NAME = "trafficEventDeduplicationStore";
+
   private static final String TRAFFIC_EVENTS_TOPIC = "trafficEvents";
+  private static final String DEDUPLICATION_STORE_NAME = "trafficEventDeduplicationStore";
+  private static final String DEDUPLICATED_TRAFFIC_EVENTS_TOPIC = "deduplicatedTrafficEvents";
 
   private final TrafficProcessorService trafficProcessorService;
+  private final LocalValidatorFactoryBean validatorFactoryBean;
 
-  public KafkaConfig(TrafficProcessorService trafficProcessorService) {
+  public KafkaConfig(
+      TrafficProcessorService trafficProcessorService,
+      LocalValidatorFactoryBean validatorFactoryBean) {
     this.trafficProcessorService = trafficProcessorService;
+    this.validatorFactoryBean = validatorFactoryBean;
+  }
+
+  @Override
+  public void configureKafkaListeners(KafkaListenerEndpointRegistrar registrar) {
+    registrar.setValidator(validatorFactoryBean);
   }
 
   @Bean
+  @ConditionalOnClass(ObservationRegistry.class)
   ConcurrentKafkaListenerContainerFactory<String, KafkaTrafficEvent> listenerFactory(
       ConsumerFactory<String, KafkaTrafficEvent> consumerFactory) {
     var factory = new ConcurrentKafkaListenerContainerFactory<String, KafkaTrafficEvent>();
@@ -82,13 +103,23 @@ public class KafkaConfig {
         .to(DEDUPLICATED_TRAFFIC_EVENTS_TOPIC, Produced.with(stringSerde, jsonSerde));
   }
 
+  @RetryableTopic(
+      attempts = "1",
+      backoff = @Backoff(delay = 200),
+      topicSuffixingStrategy = SUFFIX_WITH_INDEX_VALUE,
+      exclude = {ValidationException.class})
   @KafkaListener(
-      id = "trafficProcessorGrouped-${traficprocessor.kafka-listener.id:0}",
+      id = "trafficProcessor-${traficprocessor.kafka-listener.id:0}",
       groupId = "trafficProcessor-${traficprocessor.kafka-listener.group-id:0}",
       topics = DEDUPLICATED_TRAFFIC_EVENTS_TOPIC)
-  void groupedTrafficEventsListener(KafkaTrafficEvent trafficEvent) {
+  void deduplicatedTrafficEventsListener(@Payload @Validated KafkaTrafficEvent trafficEvent) {
     LOGGER.info("Processing Kafka Message: %s".formatted(trafficEvent.getDescription()));
     trafficProcessorService.processTrafficEvent(trafficEvent);
+  }
+
+  @DltHandler
+  public void handleTrafficEventsDlt(KafkaTrafficEvent trafficEvent) {
+    LOGGER.info("TrafficEvent sent to DLT: %s".formatted(trafficEvent.getDescription()));
   }
 }
 
