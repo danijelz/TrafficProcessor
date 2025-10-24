@@ -51,7 +51,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @SpringBootTest(classes = {KafkaConfig.class, KafkaTestConfig.class})
 @TestPropertySource(properties = "spring.kafka.streams.application-id=trafficProcessor")
-public class DeduplicatedTrafficEventListenerTest {
+public class TrafficEventListenerTest {
   @Autowired private EmbeddedKafkaBroker embeddedKafkaBroker;
   @Autowired private KafkaTemplate<String, Object> kafkaTemplate;
   @MockitoBean private TrafficProcessorService trafficProcessorService;

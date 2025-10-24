@@ -1,17 +1,13 @@
 package com.example.traficprocessor.core.domain.model;
 
-import static java.time.temporal.ChronoUnit.DAYS;
+import static com.example.traficprocessor.core.model.IdentifiableTrafficEvent.normalizeTimestamp;
 
 import com.example.traficprocessor.core.model.IdentifiableTrafficEvent;
 import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
-import java.time.Instant;
 
-public class NormalizedTrafficEvent implements IdentifiableTrafficEvent {
-  private String vehicleId;
-  private VehicleBrand vehicleBrand;
-  private long timestamp;
-
+public record NormalizedTrafficEvent(String vehicleId, VehicleBrand vehicleBrand, long timestamp)
+    implements IdentifiableTrafficEvent {
   public NormalizedTrafficEvent(TrafficEvent trafficEvent) {
     this(trafficEvent.getVehicleId(), trafficEvent.getVehicleBrand(), trafficEvent.getTimestamp());
   }
@@ -22,31 +18,20 @@ public class NormalizedTrafficEvent implements IdentifiableTrafficEvent {
     this.timestamp = normalizeTimestamp(timestamp);
   }
 
-  public String getVehicleId() {
-    return vehicleId;
+  @Override
+  public String toId() {
+    return timestamp + TIMESTAMP_VEHICLE_ID_DELIMITER + vehicleId;
   }
 
-  public void setVehicleId(String vehicleId) {
-    this.vehicleId = vehicleId;
+  public String getVehicleId() {
+    return vehicleId;
   }
 
   public VehicleBrand getVehicleBrand() {
     return vehicleBrand;
   }
 
-  public void setVehicleBrand(VehicleBrand vehicleBrand) {
-    this.vehicleBrand = vehicleBrand;
-  }
-
   public long getTimestamp() {
     return timestamp;
-  }
-
-  public void setTimestamp(long timestamp) {
-    this.timestamp = normalizeTimestamp(timestamp);
-  }
-
-  public static long normalizeTimestamp(long timestamp) {
-    return Instant.ofEpochMilli(timestamp).truncatedTo(DAYS).toEpochMilli();
   }
 }
