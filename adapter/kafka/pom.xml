@@ -62,7 +62,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- TODO spring-kafka-test unused -->
+		<!-- TODO spring-kafka-test OR org.testcontainers:kafka unused -->
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka-test</artifactId>
@@ -91,6 +91,13 @@
 		<dependency>
 			<groupId>com.example</groupId>
 			<artifactId>trafic-processor-core-domain</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-core-domain</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
