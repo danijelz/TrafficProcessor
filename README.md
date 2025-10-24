@@ -10,6 +10,7 @@ It showcases clean modular design, domain-driven structure, and strong build-tim
 
 ## 📝 Prerequisites
 
+* SDKman [https://sdkman.io/install/](https://sdkman.io/install/)
 * Java 25 (`sdk install java 25-librca`)
 * Java 25 native kit for native image (`sdk install java 25.r25-nik`)
 * Maven
@@ -36,8 +37,8 @@ It showcases clean modular design, domain-driven structure, and strong build-tim
 
 ## ▶️ Running the application
 
-* Run project with maven: `./mvnw clean install -Dmaven.test.skip && ./mvnw spring-boot:run -Prun-app -pl app`
-* Create executable JAR: `./mvnw clean install -Dmaven.test.skip`
+* Run project with maven: `./mvnw clean install [-Dmaven.test.skip] && ./mvnw spring-boot:run -Prun-app -pl app`
+* Create executable JAR: `./mvnw clean install [-Dmaven.test.skip]`
 * Run executable JAR: `java -Dspring.datasource.username=demo -Dspring.datasource.password=secret -Dspring.datasource.url=jdbc:postgresql://localhost:5432/demodb -jar demo-app-0.0.1-SNAPSHOT.jar`
 
 ---
@@ -152,7 +153,7 @@ TOKEN=`curl -d 'client_id=democlient' -d 'username=demo' -d 'password=demo' -d '
   'http://localhost:7080/realms/demorealm/protocol/openid-connect/token' | jq -r .access_token`
 ```
 
-Process a traffic event via gRPC:
+Process a traffic event via **gRPC**:
 
 ```bash
 grpcurl -H "authorization: bearer $TOKEN" \
@@ -160,7 +161,7 @@ grpcurl -H "authorization: bearer $TOKEN" \
   -plaintext localhost:8081 trafficprocessor.GrpcTrafficProcessorService.processTrafficEvent
 ```
 
-Retrieve a traffic event via gRPC:
+Retrieve a traffic event via **gRPC**:
 
 ```bash
 grpcurl -H "authorization: bearer $TOKEN" \
