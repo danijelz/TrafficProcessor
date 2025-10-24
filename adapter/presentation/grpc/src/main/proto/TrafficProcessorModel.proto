@@ -23,7 +23,7 @@ message GrpcTrafficEvent {
   int32 tollStationId = 1;
   string vehicleId = 2;
   GrpcVehicleBrand vehicleBrand = 3;
-  int64 timestamp = 4;
+  uint64 timestamp = 4;
 }
 
 message GrpcRecordedTrafficEvent {
@@ -31,7 +31,7 @@ message GrpcRecordedTrafficEvent {
   int32 tollStationId = 2;
   string vehicleId = 3;
   GrpcVehicleBrand vehicleBrand = 4;
-  int64 timestamp = 5;
+  uint64 timestamp = 5;
 }
 
 message GrpcVehicleBrandTrafficStats {

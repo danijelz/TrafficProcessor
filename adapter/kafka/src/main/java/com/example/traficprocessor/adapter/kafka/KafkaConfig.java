@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,7 +66,6 @@ public class KafkaConfig implements KafkaListenerConfigurer {
   }
 
   @Bean
-  @ConditionalOnClass(ObservationRegistry.class)
   ConcurrentKafkaListenerContainerFactory<String, KafkaTrafficEvent> listenerFactory(
       ConsumerFactory<String, KafkaTrafficEvent> consumerFactory) {
     var factory = new ConcurrentKafkaListenerContainerFactory<String, KafkaTrafficEvent>();
@@ -80,7 +80,7 @@ public class KafkaConfig implements KafkaListenerConfigurer {
   }
 
   @Autowired
-  void buildTrafficEventsPipeline(
+  void buildTrafficEventsTopology(
       StreamsBuilder streamsBuilder,
       @Value("${traficprocessor.event-expiration-seconds:10800}") int expirationInSeconds) {
     var stringSerde = Serdes.String();
@@ -126,6 +126,7 @@ public class KafkaConfig implements KafkaListenerConfigurer {
 @ConditionalOnClass(ObservationRegistry.class)
 class KafkaListenerTracerConfig {
   @Bean
+  @ConditionalOnBean(ObservationRegistry.class)
   KafkaListenerTracer kafkaListenerTracer(ObservationRegistry observationRegistry) {
     return new KafkaListenerTracer(observationRegistry);
   }
