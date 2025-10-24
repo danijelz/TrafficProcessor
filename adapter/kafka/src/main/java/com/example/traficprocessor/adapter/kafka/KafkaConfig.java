@@ -11,9 +11,11 @@ import java.time.Duration;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Produced;
 import org.slf4j.Logger;
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -30,6 +32,7 @@ import org.springframework.kafka.support.serializer.JsonSerde;
 @EnableKafkaStreams
 @Configuration(proxyBeanMethods = false)
 @PropertySource("classpath:kafka.properties")
+@RegisterReflectionForBinding(LogAndContinueExceptionHandler.class)
 public class KafkaConfig {
   private static final Logger LOGGER = getLogger(KafkaConfig.class.getName() + ".KafkaListener");
   private static final String DEDUPLICATED_TRAFFIC_EVENTS_TOPIC = "deduplicatedTrafficEvents";
