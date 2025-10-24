@@ -6,8 +6,8 @@ import static java.time.ZoneOffset.UTC;
 
 import com.example.traficprocessor.adapter.persistence.jpa.entity.JpaTrafficEventEntity;
 import com.example.traficprocessor.core.domain.exception.ServiceException;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.domain.repository.TrafficEventRepository;
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.model.RecordedTrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrandTrafficStats;
 import io.vavr.control.Try;

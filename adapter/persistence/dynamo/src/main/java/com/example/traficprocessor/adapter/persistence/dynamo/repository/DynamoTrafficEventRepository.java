@@ -10,8 +10,8 @@ import static software.amazon.awssdk.enhanced.dynamodb.internal.AttributeValues.
 
 import com.example.traficprocessor.adapter.persistence.dynamo.entity.DynamoTrafficEventEntity;
 import com.example.traficprocessor.core.domain.exception.ServiceException;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.domain.repository.TrafficEventRepository;
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.model.RecordedTrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
 import com.example.traficprocessor.core.model.VehicleBrandTrafficStats;

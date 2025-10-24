@@ -6,7 +6,7 @@ import static org.openjdk.jmh.annotations.Scope.Benchmark;
 
 import com.example.traficprocessor.adapter.persistence.dynamo.repository.DynamoTrafficEventRepository;
 import com.example.traficprocessor.adapter.persistence.jpa.repository.JpaTrafficEventRepository;
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.model.StubTrafficEvent;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.condition.DisabledInNativeImage;

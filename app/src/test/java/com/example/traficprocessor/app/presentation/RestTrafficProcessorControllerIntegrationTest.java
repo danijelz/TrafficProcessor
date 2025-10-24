@@ -18,7 +18,7 @@ import com.example.traficprocessor.adapter.presentation.rest.model.RestTrafficEv
 import com.example.traficprocessor.adapter.presentation.rest.model.RestTrafficStats;
 import com.example.traficprocessor.adapter.presentation.rest.model.RestVehicleBrandTrafficStats;
 import com.example.traficprocessor.app.RestIntegrationTest;
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.model.TrafficStats;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;

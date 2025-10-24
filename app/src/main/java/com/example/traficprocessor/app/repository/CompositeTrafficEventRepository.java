@@ -2,8 +2,8 @@ package com.example.traficprocessor.app.repository;
 
 import com.example.traficprocessor.adapter.persistence.dynamo.repository.DynamoTrafficEventRepository;
 import com.example.traficprocessor.adapter.persistence.jpa.repository.JpaTrafficEventRepository;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.domain.repository.TrafficEventRepository;
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.model.RecordedTrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrandTrafficStats;
 import java.time.YearMonth;

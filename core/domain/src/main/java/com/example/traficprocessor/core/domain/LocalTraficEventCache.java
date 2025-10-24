@@ -1,6 +1,6 @@
 package com.example.traficprocessor.core.domain;
 
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 
 /// Used for fast identification of processed [NormalizedTrafficEvents][NormalizedTrafficEvent]
 public interface LocalTraficEventCache {

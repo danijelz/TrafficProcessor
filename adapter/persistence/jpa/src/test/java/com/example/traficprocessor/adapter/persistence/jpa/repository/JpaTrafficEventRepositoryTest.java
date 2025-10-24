@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.example.traficprocessor.adapter.persistence.jpa.PersistenceJpaTest;
 import com.example.traficprocessor.core.domain.exception.ServiceException;
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.model.RecordedTrafficEvent;
 import com.example.traficprocessor.core.model.StubRecordedTrafficEvent;
 import com.example.traficprocessor.core.model.StubVehicleBrandTrafficStats;

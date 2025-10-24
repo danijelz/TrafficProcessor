@@ -1,7 +1,10 @@
-package com.example.traficprocessor.core.model;
+package com.example.traficprocessor.core.domain.model;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
+import com.example.traficprocessor.core.model.IdentifiableTrafficEvent;
+import com.example.traficprocessor.core.model.TrafficEvent;
+import com.example.traficprocessor.core.model.VehicleBrand;
 import java.time.Instant;
 
 public class NormalizedTrafficEvent implements IdentifiableTrafficEvent {

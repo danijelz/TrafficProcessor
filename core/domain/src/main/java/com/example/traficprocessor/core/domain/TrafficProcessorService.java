@@ -4,8 +4,8 @@ import static com.example.traficprocessor.core.domain.exception.ServiceException
 import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TIME_PERIOD_MESSAGE;
 
 import com.example.traficprocessor.core.domain.exception.ServiceException;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.domain.repository.TrafficEventRepository;
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.model.RecordedTrafficEvent;
 import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.TrafficStats;

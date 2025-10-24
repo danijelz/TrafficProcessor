@@ -11,8 +11,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.traficprocessor.core.domain.exception.ServiceException;
+import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.domain.repository.TrafficEventRepository;
-import com.example.traficprocessor.core.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.model.StubRecordedTrafficEvent;
 import com.example.traficprocessor.core.model.StubTrafficEvent;
 import com.example.traficprocessor.core.model.StubVehicleBrandTrafficStats;

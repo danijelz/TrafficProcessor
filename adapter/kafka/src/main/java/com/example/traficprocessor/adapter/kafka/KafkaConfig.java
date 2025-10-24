@@ -1,5 +1,8 @@
 package com.example.traficprocessor.adapter.kafka;
 
+import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATED_TRAFFIC_EVENTS_TOPIC;
+import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATION_STORE_NAME;
+import static com.example.traficprocessor.adapter.kafka.KafkaConstants.TRAFFIC_EVENTS_TOPIC;
 import static org.apache.kafka.streams.state.Stores.persistentWindowStore;
 import static org.apache.kafka.streams.state.Stores.windowStoreBuilder;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -45,10 +48,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @RegisterReflectionForBinding(LogAndContinueExceptionHandler.class)
 public class KafkaConfig implements KafkaListenerConfigurer {
   private static final Logger LOGGER = getLogger(KafkaConfig.class.getName() + ".KafkaListener");
-
-  private static final String TRAFFIC_EVENTS_TOPIC = "trafficEvents";
-  private static final String DEDUPLICATION_STORE_NAME = "trafficEventDeduplicationStore";
-  private static final String DEDUPLICATED_TRAFFIC_EVENTS_TOPIC = "deduplicatedTrafficEvents";
 
   private final TrafficProcessorService trafficProcessorService;
   private final LocalValidatorFactoryBean validatorFactoryBean;
