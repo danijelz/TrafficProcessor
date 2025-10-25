@@ -1,10 +1,13 @@
 package com.example.traficprocessor.adapter.kafka;
 
+import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATED_TRAFFIC_EVENTS_DLT_TOPIC;
+import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATED_TRAFFIC_EVENTS_RETRY_TOPIC;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATED_TRAFFIC_EVENTS_TOPIC;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.TRAFFIC_EVENTS_TOPIC;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomInt;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomString;
 import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.stream.IntStream.range;
 import static java.util.stream.StreamSupport.stream;
@@ -15,14 +18,13 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.instancio.Select.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.kafka.retrytopic.RetryTopicConstants.DEFAULT_DLT_SUFFIX;
 import static org.springframework.kafka.test.utils.KafkaTestUtils.consumerProps;
 import static org.springframework.kafka.test.utils.KafkaTestUtils.getRecords;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 import com.example.traficprocessor.core.domain.TrafficProcessorService;
+import com.example.traficprocessor.core.domain.exception.ServiceException;
 import com.example.traficprocessor.core.model.TrafficEvent;
-import java.time.Duration;
 import java.util.ArrayList;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -46,7 +48,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
     topics = {
       TRAFFIC_EVENTS_TOPIC,
       DEDUPLICATED_TRAFFIC_EVENTS_TOPIC,
-      DEDUPLICATED_TRAFFIC_EVENTS_TOPIC + DEFAULT_DLT_SUFFIX
+      DEDUPLICATED_TRAFFIC_EVENTS_RETRY_TOPIC,
+      DEDUPLICATED_TRAFFIC_EVENTS_DLT_TOPIC
     })
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @SpringBootTest(classes = {KafkaConfig.class, KafkaTestConfig.class})
@@ -116,16 +119,17 @@ public class TrafficEventListenerTest {
 
     try (var consumer = createTestConsumer()) {
       embeddedKafkaBroker.consumeFromAllEmbeddedTopics(consumer);
-      var records = getRecords(consumer, Duration.ofSeconds(10), 2);
+      var records = getRecords(consumer, ofSeconds(10), 2);
       var topics = stream(records.spliterator(), false).map(ConsumerRecord::topic).toList();
 
-      assertThat(topics).containsOnly(TRAFFIC_EVENTS_TOPIC, DEDUPLICATED_TRAFFIC_EVENTS_TOPIC);
+      assertThat(topics)
+          .containsExactlyInAnyOrder(TRAFFIC_EVENTS_TOPIC, DEDUPLICATED_TRAFFIC_EVENTS_TOPIC);
     }
   }
 
   @Test
   void
-      givenInvalidTrafficEvent_WhenSentToTrafficEventsTopic_ThenTrafficEventIsPassedToDeduplicatedTrafficEventsDltTopic() {
+      givenInvalidTrafficEvent_WhenSentToTrafficEventsTopic_ThenTrafficEventIsPassedToDltHandler() {
     var trafficEvent =
         Instancio.of(KafkaTrafficEvent.class)
             .generate(field("timestamp"), gen -> gen.longs().max(-1l))
@@ -134,14 +138,36 @@ public class TrafficEventListenerTest {
 
     try (var consumer = createTestConsumer()) {
       embeddedKafkaBroker.consumeFromAllEmbeddedTopics(consumer);
-      var records = getRecords(consumer, Duration.ofSeconds(10), 3);
+      var records = getRecords(consumer, ofSeconds(10), 3);
       var topics = stream(records.spliterator(), false).map(ConsumerRecord::topic).toList();
 
       assertThat(topics)
-          .containsOnly(
+          .containsExactlyInAnyOrder(
               TRAFFIC_EVENTS_TOPIC,
               DEDUPLICATED_TRAFFIC_EVENTS_TOPIC,
-              DEDUPLICATED_TRAFFIC_EVENTS_TOPIC + DEFAULT_DLT_SUFFIX);
+              DEDUPLICATED_TRAFFIC_EVENTS_DLT_TOPIC);
+    }
+  }
+
+  @Test
+  void
+      givenValidTrafficEvent_WhenSentToTrafficEventsTopicAndServiceRejectsTheEvent_ThenTrafficEventIsFirstPassedToRetryTopicAndThenDltHandler() {
+    when(trafficProcessorService.processTrafficEvent(any())).thenThrow(ServiceException.class);
+
+    var trafficEvent = Instancio.create(KafkaTrafficEvent.class);
+    kafkaTemplate.send(TRAFFIC_EVENTS_TOPIC, trafficEvent);
+
+    try (var consumer = createTestConsumer()) {
+      embeddedKafkaBroker.consumeFromAllEmbeddedTopics(consumer);
+      var records = getRecords(consumer, ofSeconds(10), 4);
+      var topics = stream(records.spliterator(), false).map(ConsumerRecord::topic).toList();
+
+      assertThat(topics)
+          .containsExactlyInAnyOrder(
+              TRAFFIC_EVENTS_TOPIC,
+              DEDUPLICATED_TRAFFIC_EVENTS_TOPIC,
+              DEDUPLICATED_TRAFFIC_EVENTS_RETRY_TOPIC,
+              DEDUPLICATED_TRAFFIC_EVENTS_DLT_TOPIC);
     }
   }
 

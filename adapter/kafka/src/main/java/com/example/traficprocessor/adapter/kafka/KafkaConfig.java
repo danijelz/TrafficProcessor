@@ -39,7 +39,6 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -103,10 +102,9 @@ public class KafkaConfig implements KafkaListenerConfigurer {
   }
 
   @RetryableTopic(
-      attempts = "1",
-      backoff = @Backoff(delay = 200),
+      attempts = "2",
       topicSuffixingStrategy = SUFFIX_WITH_INDEX_VALUE,
-      exclude = {ValidationException.class})
+      exclude = ValidationException.class)
   @KafkaListener(
       id = "trafficProcessor-${traficprocessor.kafka-listener.id:0}",
       groupId = "trafficProcessor-${traficprocessor.kafka-listener.group-id:0}",
