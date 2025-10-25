@@ -13,6 +13,7 @@ import com.example.traficprocessor.adapter.presentation.grpc.model.GrpcTraficSta
 import com.example.traficprocessor.core.domain.TrafficProcessorService;
 import com.google.protobuf.StringValue;
 import io.grpc.stub.StreamObserver;
+import jakarta.validation.ValidationException;
 import org.springframework.grpc.server.service.GrpcService;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -32,7 +33,7 @@ public class GrpcTrafficProcessorController extends GrpcTrafficProcessorServiceI
   public void processTrafficEvent(
       GrpcTrafficEvent request, StreamObserver<StringValue> responseObserver) {
     var trafficEvent = new GrpcTrafficEventAdapter(request);
-    validatorFactoryBean.validateObject(trafficEvent);
+    validatorFactoryBean.validateObject(trafficEvent).failOnError(ValidationException::new);
     var id = trafficProcessorService.processTrafficEvent(trafficEvent);
     responseObserver.onNext(StringValue.of(id));
     responseObserver.onCompleted();
