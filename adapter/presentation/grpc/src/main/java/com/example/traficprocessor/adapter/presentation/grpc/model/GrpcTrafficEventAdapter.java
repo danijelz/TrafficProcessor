@@ -2,6 +2,9 @@ package com.example.traficprocessor.adapter.presentation.grpc.model;
 
 import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class GrpcTrafficEventAdapter implements TrafficEvent {
   private final GrpcTrafficEvent body;
@@ -16,16 +19,20 @@ public class GrpcTrafficEventAdapter implements TrafficEvent {
   }
 
   @Override
+  @NotNull
+  @Size(min = 3)
   public String getVehicleId() {
     return body.getVehicleId();
   }
 
   @Override
+  @NotNull
   public VehicleBrand getVehicleBrand() {
     return VehicleBrand.values()[body.getVehicleBrand().ordinal()];
   }
 
   @Override
+  @Min(0)
   public long getTimestamp() {
     return body.getTimestamp();
   }

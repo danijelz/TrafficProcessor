@@ -35,6 +35,7 @@ public class RestTrafficEvent implements TrafficEvent {
   }
 
   @Override
+  @NotNull
   @Size(min = 3)
   @Schema(description = "TrafficEvent.vehicleId description")
   public String getVehicleId() {
@@ -56,8 +57,8 @@ public class RestTrafficEvent implements TrafficEvent {
     this.vehicleBrand = vehicleBrand;
   }
 
-  @Min(0)
   @Override
+  @Min(0)
   @Schema(description = "TrafficEvent.timestamp description")
   public long getTimestamp() {
     return timestamp;

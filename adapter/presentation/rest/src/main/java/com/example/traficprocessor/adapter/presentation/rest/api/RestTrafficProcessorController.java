@@ -43,7 +43,8 @@ public class RestTrafficProcessorController implements RestTrafficProcessorApi {
 
   @Override
   @PostMapping
-  public ResponseEntity<Void> processTrafficEvent(@RequestBody RestTrafficEvent trafficEvent) {
+  public ResponseEntity<Void> processTrafficEvent(
+      @RequestBody @Validated RestTrafficEvent trafficEvent) {
     var id = trafficProcessorService.processTrafficEvent(trafficEvent);
     var location = linkTo(methodOn(getClass()).retrieveTrafficEvent(id)).toUri();
     return ResponseEntity.created(location).build();

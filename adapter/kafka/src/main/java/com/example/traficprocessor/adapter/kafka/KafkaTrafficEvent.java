@@ -32,6 +32,7 @@ public class KafkaTrafficEvent implements TrafficEvent {
   }
 
   @Override
+  @NotNull
   @Size(min = 3)
   public String getVehicleId() {
     return vehicleId;

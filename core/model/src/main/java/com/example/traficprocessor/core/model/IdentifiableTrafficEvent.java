@@ -5,7 +5,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import java.time.Instant;
 
 public interface IdentifiableTrafficEvent {
-  static char TIMESTAMP_VEHICLE_ID_DELIMITER = '_';
+  static String TIMESTAMP_VEHICLE_ID_DELIMITER = "_";
 
   String getVehicleId();
 

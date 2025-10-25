@@ -14,19 +14,26 @@ import com.example.traficprocessor.core.domain.TrafficProcessorService;
 import com.google.protobuf.StringValue;
 import io.grpc.stub.StreamObserver;
 import org.springframework.grpc.server.service.GrpcService;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @GrpcService
 public class GrpcTrafficProcessorController extends GrpcTrafficProcessorServiceImplBase {
   private final TrafficProcessorService trafficProcessorService;
+  private final LocalValidatorFactoryBean validatorFactoryBean;
 
-  public GrpcTrafficProcessorController(TrafficProcessorService trafficProcessorService) {
+  public GrpcTrafficProcessorController(
+      TrafficProcessorService trafficProcessorService,
+      LocalValidatorFactoryBean validatorFactoryBean) {
     this.trafficProcessorService = trafficProcessorService;
+    this.validatorFactoryBean = validatorFactoryBean;
   }
 
   @Override
   public void processTrafficEvent(
       GrpcTrafficEvent request, StreamObserver<StringValue> responseObserver) {
-    var id = trafficProcessorService.processTrafficEvent(new GrpcTrafficEventAdapter(request));
+    var trafficEvent = new GrpcTrafficEventAdapter(request);
+    validatorFactoryBean.validateObject(trafficEvent);
+    var id = trafficProcessorService.processTrafficEvent(trafficEvent);
     responseObserver.onNext(StringValue.of(id));
     responseObserver.onCompleted();
   }
