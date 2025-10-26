@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 public class IndexControllerTest extends PresentationRestTest {
   @Test
-  public void givenRequestToIndex_WhenProcessed_ThenResponseContainsRedirectionToSwagger()
+  void givenRequestToIndex_WhenProcessed_ThenResponseContainsRedirectionToSwagger()
       throws Exception {
     this.mvc
         .perform(get(INDEX_PATH))

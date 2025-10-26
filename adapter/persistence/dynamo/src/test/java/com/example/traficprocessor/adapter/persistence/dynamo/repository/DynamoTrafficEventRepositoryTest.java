@@ -1,6 +1,6 @@
 package com.example.traficprocessor.adapter.persistence.dynamo.repository;
 
-import static com.example.traficprocessor.adapter.persistence.dynamo.i18n.DynamoI18nInfoConstants.INVALID_ID_MESSAGE;
+import static com.example.traficprocessor.adapter.persistence.dynamo.i18n.DynamoI18nMessageConstants.INVALID_ID_MESSAGE;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomInt;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomString;
 import static java.time.ZoneOffset.UTC;

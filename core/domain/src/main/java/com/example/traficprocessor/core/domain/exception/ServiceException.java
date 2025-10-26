@@ -1,6 +1,6 @@
 package com.example.traficprocessor.core.domain.exception;
 
-import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INTERNAL_ERROR_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants.INTERNAL_ERROR_MESSAGE;
 import static com.example.traficprocessor.core.domain.utils.CharSequences.isBlank;
 import static java.util.UUID.randomUUID;
 

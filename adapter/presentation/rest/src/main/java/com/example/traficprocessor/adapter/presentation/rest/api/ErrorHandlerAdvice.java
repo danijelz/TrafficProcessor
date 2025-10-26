@@ -35,7 +35,7 @@ public class ErrorHandlerAdvice {
       case BAD_REQUST -> HttpStatus.BAD_REQUEST;
       case NOT_FOUND -> HttpStatus.NOT_FOUND;
       case CONFLICT -> HttpStatus.CONFLICT;
-      case UNATHORIZED -> HttpStatus.UNAUTHORIZED;
+      case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
       case INTERNAL_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
     };
   }

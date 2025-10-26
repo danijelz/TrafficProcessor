@@ -420,6 +420,13 @@
 							<includes>
 								<include>com/example/traficprocessor/**</include>
 							</includes>
+							<excludes>
+								<include>com/example/traficprocessor/core/domain/utils/**</include>
+								<include>
+									com/example/traficprocessor/adapter/presentation/grpc/model/**</include>
+								<include>
+									com/example/traficprocessor/adapter/presentation/grpc/api/**</include>
+							</excludes>
 						</configuration>
 						<executions>
 							<execution>
@@ -429,7 +436,7 @@
 								</goals>
 							</execution>
 							<execution>
-								<id>report</id>
+								<id>generate-report</id>
 								<goals>
 									<goal>report</goal>
 								</goals>

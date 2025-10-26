@@ -1,8 +1,8 @@
 package com.example.traficprocessor.core.domain;
 
-import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TIME_PERIOD_MESSAGE;
-import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
-import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_VEHICLE_ID_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants.INVALID_TIME_PERIOD_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants.INVALID_VEHICLE_ID_MESSAGE;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

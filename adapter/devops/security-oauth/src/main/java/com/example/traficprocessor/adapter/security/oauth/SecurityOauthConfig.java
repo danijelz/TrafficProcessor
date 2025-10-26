@@ -4,8 +4,8 @@ import static com.example.traficprocessor.adapter.presentation.rest.RestPresenta
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.INDEX_PATH;
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.OPENAPI_PATH;
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.SWAGGER_PATH;
-import static com.example.traficprocessor.adapter.security.oauth.i18n.SecurityOauthI18nInfoConstants.UNAUTHORIZED_MESSAGE;
-import static com.example.traficprocessor.core.domain.exception.ServiceExceptionStatus.UNATHORIZED;
+import static com.example.traficprocessor.adapter.security.oauth.i18n.SecurityOauthI18nMessageConstants.UNAUTHORIZED_MESSAGE;
+import static com.example.traficprocessor.core.domain.exception.ServiceExceptionStatus.UNAUTHORIZED;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import com.example.traficprocessor.adapter.presentation.grpc.GrpcPresentationConfig;
@@ -33,17 +33,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityOauthConfig {
   @Bean
   I18nMessagesBasenameProvider securityOauthI18nMessagesBasenameProvider() {
-    return () -> "classpath:i18n/messages-oath";
+    return () -> "classpath:i18n/messages-oauth";
   }
 
   @ServiceExceptionAdvisor
   ServiceException translateAuthenticationException(AuthenticationException exception) {
-    return new ServiceException(exception, UNATHORIZED, UNAUTHORIZED_MESSAGE.toMessage());
+    return new ServiceException(exception, UNAUTHORIZED, UNAUTHORIZED_MESSAGE.toMessage());
   }
 }
 
 @Configuration
-@ConditionalOnMissingClass("com.example.traficprocessor.adapter.presentation.rest.RestPresentationConfig")
+@ConditionalOnMissingClass(
+    "com.example.traficprocessor.adapter.presentation.rest.RestPresentationConfig")
 class DefaultRestSecurityConfig {
   @Bean
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

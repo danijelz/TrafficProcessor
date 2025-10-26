@@ -10,6 +10,6 @@ public class JpaI18nMessagesTest implements I18nMessagesTest {
 
   @Override
   public Class<?> getI18nInfoConstantsClass() {
-    return JpaI18nInfoConstants.class;
+    return JpaI18nMessageConstants.class;
   }
 }

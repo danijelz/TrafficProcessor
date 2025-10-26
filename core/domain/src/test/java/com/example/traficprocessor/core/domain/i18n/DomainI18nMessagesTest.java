@@ -8,6 +8,6 @@ public class DomainI18nMessagesTest implements I18nMessagesTest {
 
   @Override
   public Class<?> getI18nInfoConstantsClass() {
-    return DomainI18nInfoConstants.class;
+    return DomainI18nMessageConstants.class;
   }
 }

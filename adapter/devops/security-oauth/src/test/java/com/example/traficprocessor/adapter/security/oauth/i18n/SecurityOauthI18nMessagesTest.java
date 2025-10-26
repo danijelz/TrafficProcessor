@@ -10,6 +10,6 @@ public class SecurityOauthI18nMessagesTest implements I18nMessagesTest {
 
   @Override
   public Class<?> getI18nInfoConstantsClass() {
-    return SecurityOauthI18nInfoConstants.class;
+    return SecurityOauthI18nMessageConstants.class;
   }
 }

@@ -1,7 +1,7 @@
 package com.example.traficprocessor.core.domain.model;
 
 import static com.example.traficprocessor.core.domain.exception.ServiceExceptionStatus.BAD_REQUST;
-import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
 import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.isValidTrafficEvent;
 import static com.example.traficprocessor.core.model.IdentifiableTrafficEvent.normalizeTimestamp;
 

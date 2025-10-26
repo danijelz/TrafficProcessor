@@ -1,6 +1,7 @@
 package com.example.traficprocessor.adapter.presentation.rest.hateoas;
 
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.API_PATH;
+import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.http.HttpMethod.GET;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(API_PATH)
 public class ModelRepresentationController {
-  @GetMapping
+  @GetMapping(produces = HAL_JSON_VALUE)
   ResponseEntity<RepresentationModel<?>> modelRepresentation() {
     var model = new RepresentationModel<>();
     model.add(
@@ -35,6 +36,7 @@ public class ModelRepresentationController {
         linkTo(methodOn(controller).retrieveTrafficStats(null, null))
             .withRel("retrieveTrafficStats")
             .withType(GET.name()));
+
     return ResponseEntity.ok(model);
   }
 }

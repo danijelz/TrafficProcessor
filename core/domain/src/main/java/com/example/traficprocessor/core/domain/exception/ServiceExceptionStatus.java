@@ -4,6 +4,6 @@ public enum ServiceExceptionStatus {
   BAD_REQUST,
   NOT_FOUND,
   CONFLICT,
-  UNATHORIZED,
+  UNAUTHORIZED,
   INTERNAL_ERROR;
 }

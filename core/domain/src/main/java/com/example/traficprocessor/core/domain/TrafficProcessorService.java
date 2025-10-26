@@ -1,12 +1,12 @@
 package com.example.traficprocessor.core.domain;
 
 import static com.example.traficprocessor.core.domain.exception.ServiceExceptionStatus.BAD_REQUST;
-import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TIME_PERIOD_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants.INVALID_TIME_PERIOD_MESSAGE;
 import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_VEHICLE_ID_LENGTH;
 import static com.example.traficprocessor.core.domain.utils.CharSequences.isBlank;
 
 import com.example.traficprocessor.core.domain.exception.ServiceException;
-import com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants;
+import com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants;
 import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.domain.repository.TrafficEventRepository;
 import com.example.traficprocessor.core.model.RecordedTrafficEvent;
@@ -41,7 +41,7 @@ public class TrafficProcessorService {
   public <TE extends RecordedTrafficEvent> TE retrieveTrafficEvent(
       String id, Supplier<TE> recordedTrafficEventFactory) {
     if (isBlank(id) || id.length() < MIN_VEHICLE_ID_LENGTH) {
-      var message = DomainI18nInfoConstants.INVALID_VEHICLE_ID_MESSAGE.toMessage(id);
+      var message = DomainI18nMessageConstants.INVALID_VEHICLE_ID_MESSAGE.toMessage(id);
       throw new ServiceException(BAD_REQUST, message);
     }
 

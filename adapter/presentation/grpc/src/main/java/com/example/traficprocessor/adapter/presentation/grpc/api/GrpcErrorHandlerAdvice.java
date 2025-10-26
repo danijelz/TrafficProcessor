@@ -27,7 +27,7 @@ public class GrpcErrorHandlerAdvice implements GrpcExceptionHandler {
       case BAD_REQUST -> Status.INVALID_ARGUMENT;
       case NOT_FOUND -> Status.NOT_FOUND;
       case CONFLICT -> Status.ALREADY_EXISTS;
-      case UNATHORIZED -> Status.UNAUTHENTICATED;
+      case UNAUTHORIZED -> Status.UNAUTHENTICATED;
       case INTERNAL_ERROR -> Status.INTERNAL;
     };
   }

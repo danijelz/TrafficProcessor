@@ -1,6 +1,6 @@
 package com.example.traficprocessor.adapter.persistence.jpa.repository;
 
-import static com.example.traficprocessor.adapter.persistence.jpa.i18n.JpaI18nInfoConstants.INVALID_ID_MESSAGE;
+import static com.example.traficprocessor.adapter.persistence.jpa.i18n.JpaI18nMessageConstants.INVALID_ID_MESSAGE;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomInt;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomString;
 import static java.time.ZoneOffset.UTC;

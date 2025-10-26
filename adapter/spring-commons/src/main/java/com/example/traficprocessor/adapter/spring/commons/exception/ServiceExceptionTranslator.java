@@ -2,7 +2,7 @@ package com.example.traficprocessor.adapter.spring.commons.exception;
 
 import static com.example.traficprocessor.adapter.spring.commons.exception.ServiceExceptionTranslatorScanner.scanServiceExceptionTranslators;
 import static com.example.traficprocessor.core.domain.exception.ServiceExceptionStatus.INTERNAL_ERROR;
-import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INTERNAL_ERROR_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants.INTERNAL_ERROR_MESSAGE;
 import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 

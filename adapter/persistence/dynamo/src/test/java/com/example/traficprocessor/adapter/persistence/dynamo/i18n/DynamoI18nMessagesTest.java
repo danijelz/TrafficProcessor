@@ -10,6 +10,6 @@ public class DynamoI18nMessagesTest implements I18nMessagesTest {
 
   @Override
   public Class<?> getI18nInfoConstantsClass() {
-    return DynamoI18nInfoConstants.class;
+    return DynamoI18nMessageConstants.class;
   }
 }

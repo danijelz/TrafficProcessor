@@ -30,11 +30,9 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
 
 public class RestTrafficProcessorControllerIntegrationTest extends RestIntegrationTest
     implements JacksonRestTestUtils {
-  @Autowired private MockMvc mvc;
   @Autowired private ObjectMapper mapper;
 
   @Override

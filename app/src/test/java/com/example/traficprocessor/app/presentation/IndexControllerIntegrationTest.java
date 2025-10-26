@@ -13,19 +13,17 @@ import org.junit.jupiter.api.Test;
 
 public class IndexControllerIntegrationTest extends RestIntegrationTest {
   @Test
-  public void givenRequestToIndex_WhenProcessed_ThenResponseContainsRedirectionToSwagger()
+  void givenRequestToIndex_WhenProcessed_ThenResponseContainsRedirectionToSwagger()
       throws Exception {
-    this.mvc
-        .perform(get(INDEX_PATH))
+    mvc.perform(get(INDEX_PATH))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(SWAGGER_INDEX_PATH));
   }
 
   @Test
-  public void givenRequestToSwaggerIndex_WhenProcessed_ThenResponseContainsSwaggerHtmlPage()
+  void givenRequestToSwaggerIndex_WhenProcessed_ThenResponseContainsSwaggerHtmlPage()
       throws Exception {
-    this.mvc
-        .perform(get(SWAGGER_INDEX_PATH))
+    mvc.perform(get(SWAGGER_INDEX_PATH))
         .andExpect(status().isOk())
         .andExpect(content().contentType(TEXT_HTML));
   }

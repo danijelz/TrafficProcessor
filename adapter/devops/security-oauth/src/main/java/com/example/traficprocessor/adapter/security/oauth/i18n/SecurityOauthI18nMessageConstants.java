@@ -4,6 +4,6 @@ import static com.example.traficprocessor.core.domain.i18n.I18nMessageConstant.o
 
 import com.example.traficprocessor.core.domain.i18n.I18nMessageConstant;
 
-public interface SecurityOauthI18nInfoConstants {
-  I18nMessageConstant UNAUTHORIZED_MESSAGE = of("OAUTH-001", "Unathorized access.");
+public interface SecurityOauthI18nMessageConstants {
+  I18nMessageConstant UNAUTHORIZED_MESSAGE = of("OAUTH-001", "Unauthorized access.");
 }

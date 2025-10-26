@@ -2,7 +2,7 @@ package com.example.traficprocessor.core.domain.i18n;
 
 import static com.example.traficprocessor.core.domain.i18n.I18nMessageConstant.of;
 
-public interface DomainI18nInfoConstants {
+public interface DomainI18nMessageConstants {
   I18nMessageConstant INTERNAL_ERROR_MESSAGE = of("DOMAIN-001", "Oops something went wrong...");
   I18nMessageConstant INVALID_TRAFFIC_EVENT_MESSAGE =
       of(

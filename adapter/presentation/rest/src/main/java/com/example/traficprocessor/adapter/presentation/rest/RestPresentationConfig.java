@@ -3,7 +3,7 @@ package com.example.traficprocessor.adapter.presentation.rest;
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.OPEN_API_DESCRIPTION;
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.OPEN_API_TITLE;
 import static com.example.traficprocessor.core.domain.exception.ServiceExceptionStatus.BAD_REQUST;
-import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nMessageConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
 import static io.swagger.v3.oas.models.security.SecurityScheme.In.HEADER;
 import static io.swagger.v3.oas.models.security.SecurityScheme.Type.OAUTH2;
 

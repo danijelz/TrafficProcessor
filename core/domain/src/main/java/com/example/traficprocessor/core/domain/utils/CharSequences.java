@@ -1,9 +1,5 @@
 package com.example.traficprocessor.core.domain.utils;
 
-import static com.example.traficprocessor.core.domain.utils.Values.ifEmptyOrElseGet;
-
-import java.util.Objects;
-
 public class CharSequences {
   private CharSequences() {}
 
@@ -38,13 +34,5 @@ public class CharSequences {
       throw new IllegalArgumentException(message);
     }
     return obj;
-  }
-
-  public static String nullSafeString(Object obj) {
-    return ifEmptyOrElseGet(obj, () -> "", Objects::toString);
-  }
-
-  public static String nullSafeString(String str) {
-    return str == null ? "" : str;
   }
 }
