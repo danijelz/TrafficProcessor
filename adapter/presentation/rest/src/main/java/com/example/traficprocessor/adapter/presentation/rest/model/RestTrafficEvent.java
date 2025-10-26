@@ -1,5 +1,8 @@
 package com.example.traficprocessor.adapter.presentation.rest.model;
 
+import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_TIMESTAMP;
+import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_VEHICLE_ID_LENGTH;
+
 import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,7 +39,7 @@ public class RestTrafficEvent implements TrafficEvent {
 
   @Override
   @NotNull
-  @Size(min = 3)
+  @Size(min = MIN_VEHICLE_ID_LENGTH)
   @Schema(description = "TrafficEvent.vehicleId description")
   public String getVehicleId() {
     return vehicleId;
@@ -58,7 +61,7 @@ public class RestTrafficEvent implements TrafficEvent {
   }
 
   @Override
-  @Min(0)
+  @Min(MIN_TIMESTAMP)
   @Schema(description = "TrafficEvent.timestamp description")
   public long getTimestamp() {
     return timestamp;

@@ -3,7 +3,6 @@ package com.example.traficprocessor.core.domain.utils;
 import static com.example.traficprocessor.core.domain.utils.Values.ifEmptyOrElseGet;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class CharSequences {
   private CharSequences() {}
@@ -25,14 +24,6 @@ public class CharSequences {
     }
 
     return index == length;
-  }
-
-  public static <T extends CharSequence> T ifNotBlankOrGet(final T sequence, T other) {
-    return isBlank(sequence) ? other : sequence;
-  }
-
-  public static <T extends CharSequence> T ifNotBlankOrSupply(final T sequence, Supplier<T> other) {
-    return isBlank(sequence) ? other.get() : sequence;
   }
 
   public static <T extends CharSequence> T requireNotBlank(T obj) {

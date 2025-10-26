@@ -1,5 +1,8 @@
 package com.example.traficprocessor.adapter.presentation.grpc.model;
 
+import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_TIMESTAMP;
+import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_VEHICLE_ID_LENGTH;
+
 import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
 import jakarta.validation.constraints.Min;
@@ -20,7 +23,7 @@ public class GrpcTrafficEventAdapter implements TrafficEvent {
 
   @Override
   @NotNull
-  @Size(min = 3)
+  @Size(min = MIN_VEHICLE_ID_LENGTH)
   public String getVehicleId() {
     return body.getVehicleId();
   }
@@ -32,7 +35,7 @@ public class GrpcTrafficEventAdapter implements TrafficEvent {
   }
 
   @Override
-  @Min(0)
+  @Min(MIN_TIMESTAMP)
   public long getTimestamp() {
     return body.getTimestamp();
   }

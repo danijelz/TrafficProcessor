@@ -4,6 +4,12 @@ import static com.example.traficprocessor.core.domain.i18n.I18nMessageConstant.o
 
 public interface DomainI18nInfoConstants {
   I18nMessageConstant INTERNAL_ERROR_MESSAGE = of("DOMAIN-001", "Oops something went wrong...");
+  I18nMessageConstant INVALID_TRAFFIC_EVENT_MESSAGE =
+      of(
+          "DOMAIN-002",
+          """
+          Invalid TrafficEvent(%s, %s, %s}, required; vehicleId.length >= 0, \
+          vehicleBrand != null, timestamp ?= 0.""");
   I18nMessageConstant INVALID_TIME_PERIOD_MESSAGE =
-      of("DOMAIN-002", "Invalid time period [%s, %s], 'from' must be before 'to'.");
+      of("DOMAIN-003", "Invalid time period [%s, %s], 'from' must be before 'to'.");
 }

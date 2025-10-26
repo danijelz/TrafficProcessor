@@ -1,8 +1,10 @@
 package com.example.traficprocessor.core.domain;
 
 import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TIME_PERIOD_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.instancio.Select.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -13,10 +15,10 @@ import static org.mockito.Mockito.when;
 import com.example.traficprocessor.core.domain.exception.ServiceException;
 import com.example.traficprocessor.core.domain.model.NormalizedTrafficEvent;
 import com.example.traficprocessor.core.domain.repository.TrafficEventRepository;
+import com.example.traficprocessor.core.model.I18nMessage;
 import com.example.traficprocessor.core.model.StubRecordedTrafficEvent;
 import com.example.traficprocessor.core.model.StubTrafficEvent;
 import com.example.traficprocessor.core.model.StubVehicleBrandTrafficStats;
-import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.TrafficStats;
 import com.example.traficprocessor.core.model.VehicleBrandTrafficStats;
 import java.time.YearMonth;
@@ -33,11 +35,7 @@ public class TrafficProcessorServiceTest {
 
     var trafficProcessorRepository = mock(TrafficEventRepository.class);
     when(trafficProcessorRepository.persistTrafficEvent(any()))
-        .then(
-            invocation -> {
-              var trafficEvent = invocation.<NormalizedTrafficEvent>getArgument(0);
-              return trafficEvent.toId();
-            });
+        .then(i -> i.<NormalizedTrafficEvent>getArgument(0).toId());
 
     var trafficProcessorService =
         new TrafficProcessorService(localTraficEventCache, trafficProcessorRepository);
@@ -58,11 +56,7 @@ public class TrafficProcessorServiceTest {
 
     var trafficProcessorRepository = mock(TrafficEventRepository.class);
     when(trafficProcessorRepository.persistTrafficEvent(any()))
-        .then(
-            invocation -> {
-              var trafficEvent = invocation.<TrafficEvent>getArgument(0);
-              return trafficEvent.toId();
-            });
+        .then(i -> i.<NormalizedTrafficEvent>getArgument(0).toId());
 
     var trafficProcessorService =
         new TrafficProcessorService(localTraficEventCache, trafficProcessorRepository);
@@ -73,6 +67,75 @@ public class TrafficProcessorServiceTest {
 
     verify(localTraficEventCache, times(1)).register((NormalizedTrafficEvent) any());
     verify(trafficProcessorRepository, never()).persistTrafficEvent(any());
+  }
+
+  @Test
+  void givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenExceptionIsThrown() {
+    var localTraficEventCache = mock(LocalTraficEventCache.class);
+
+    var trafficProcessorRepository = mock(TrafficEventRepository.class);
+
+    var trafficProcessorService =
+        new TrafficProcessorService(localTraficEventCache, trafficProcessorRepository);
+
+    var trafficEventWithNullvehicleId =
+        Instancio.of(StubTrafficEvent.class).set(field("vehicleId"), null).create();
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(
+            () -> trafficProcessorService.processTrafficEvent(trafficEventWithNullvehicleId))
+        .extracting(ServiceException::getDescription)
+        .extracting(I18nMessage::code)
+        .isEqualTo(INVALID_TRAFFIC_EVENT_MESSAGE.code());
+
+    var trafficEventWithShortVehicleId =
+        Instancio.of(StubTrafficEvent.class)
+            .generate(field("vehicleId"), gen -> gen.string().maxLength(2))
+            .create();
+
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(
+            () -> trafficProcessorService.processTrafficEvent(trafficEventWithShortVehicleId))
+        .extracting(ServiceException::getDescription)
+        .extracting(I18nMessage::code)
+        .isEqualTo(INVALID_TRAFFIC_EVENT_MESSAGE.code());
+  }
+
+  @Test
+  void givenTrafficEventWithInvalidVehicleBrand_WhenProcessing_ThenExceptionIsThrown() {
+    var localTraficEventCache = mock(LocalTraficEventCache.class);
+
+    var trafficProcessorRepository = mock(TrafficEventRepository.class);
+
+    var trafficProcessorService =
+        new TrafficProcessorService(localTraficEventCache, trafficProcessorRepository);
+
+    var trafficEvent =
+        Instancio.of(StubTrafficEvent.class).set(field("vehicleBrand"), null).create();
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(() -> trafficProcessorService.processTrafficEvent(trafficEvent))
+        .extracting(ServiceException::getDescription)
+        .extracting(I18nMessage::code)
+        .isEqualTo(INVALID_TRAFFIC_EVENT_MESSAGE.code());
+  }
+
+  @Test
+  void givenTrafficEventWithInvalidTimestamp_WhenProcessing_ThenExceptionIsThrown() {
+    var localTraficEventCache = mock(LocalTraficEventCache.class);
+
+    var trafficProcessorRepository = mock(TrafficEventRepository.class);
+
+    var trafficProcessorService =
+        new TrafficProcessorService(localTraficEventCache, trafficProcessorRepository);
+
+    var trafficEvent =
+        Instancio.of(StubTrafficEvent.class)
+            .generate(field("timestamp"), gen -> gen.longs().max(-1l))
+            .create();
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(() -> trafficProcessorService.processTrafficEvent(trafficEvent))
+        .extracting(ServiceException::getDescription)
+        .extracting(I18nMessage::code)
+        .isEqualTo(INVALID_TRAFFIC_EVENT_MESSAGE.code());
   }
 
   @Test

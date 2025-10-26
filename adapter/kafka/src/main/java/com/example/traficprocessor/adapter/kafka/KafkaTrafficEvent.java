@@ -1,5 +1,8 @@
 package com.example.traficprocessor.adapter.kafka;
 
+import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_TIMESTAMP;
+import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_VEHICLE_ID_LENGTH;
+
 import com.example.traficprocessor.core.model.TrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
 import jakarta.validation.constraints.Min;
@@ -33,7 +36,7 @@ public class KafkaTrafficEvent implements TrafficEvent {
 
   @Override
   @NotNull
-  @Size(min = 3)
+  @Size(min = MIN_VEHICLE_ID_LENGTH)
   public String getVehicleId() {
     return vehicleId;
   }
@@ -52,8 +55,8 @@ public class KafkaTrafficEvent implements TrafficEvent {
     this.vehicleBrand = vehicleBrand;
   }
 
-  @Min(0)
   @Override
+  @Min(MIN_TIMESTAMP)
   public long getTimestamp() {
     return timestamp;
   }

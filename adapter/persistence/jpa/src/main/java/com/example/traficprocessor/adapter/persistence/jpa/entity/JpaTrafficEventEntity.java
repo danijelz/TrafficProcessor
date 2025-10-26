@@ -1,5 +1,8 @@
 package com.example.traficprocessor.adapter.persistence.jpa.entity;
 
+import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_TIMESTAMP;
+import static com.example.traficprocessor.core.domain.model.TrafficEventConstraints.MIN_VEHICLE_ID_LENGTH;
+
 import com.example.traficprocessor.adapter.persistence.jpa.entity.JpaTrafficEventIdGenerator.JpaTrafficEventIdGeneratorType;
 import com.example.traficprocessor.core.model.IdentifiableTrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
@@ -30,9 +33,9 @@ public class JpaTrafficEventEntity implements IdentifiableTrafficEvent {
     this.id = id;
   }
 
-  @NotNull
-  @Size(min = 3)
   @Override
+  @NotNull
+  @Size(min = MIN_VEHICLE_ID_LENGTH)
   public String getVehicleId() {
     return vehicleId;
   }
@@ -51,8 +54,8 @@ public class JpaTrafficEventEntity implements IdentifiableTrafficEvent {
     this.vehicleBrand = vehicleBrand;
   }
 
-  @Min(0)
   @Override
+  @Min(MIN_TIMESTAMP)
   public long getTimestamp() {
     return timestamp;
   }
