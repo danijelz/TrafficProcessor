@@ -25,7 +25,7 @@ public class ErrorHandlerAdvice {
     var serviceException = exceptionTranslator.handleAndLogException(throwable);
     var problem =
         Problem.create()
-            .withTitle("Exception ID:" + serviceException.getId())
+            .withTitle("Exception ID: " + serviceException.getId())
             .withDetail(exceptionTranslator.getLocalizedMessage(serviceException));
     return new ResponseEntity<>(problem, toHttpStatus(serviceException.getStatus()));
   }

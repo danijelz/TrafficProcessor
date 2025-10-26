@@ -3,9 +3,11 @@ package com.example.traficprocessor.adapter.presentation.rest.api;
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.TRAFFIC_EVENTS_API_PATH;
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.TRAFFIC_EVENTS_RESOURCE_PATH;
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.TRAFFIC_STATS_PATH;
+import static com.example.traficprocessor.core.domain.utils.Randoms.randomString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.instancio.Select.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -37,8 +39,7 @@ public class RestTrafficProcessorControllerTest extends PresentationRestTest {
     var id = trafficEvent.toId();
     var content = toJson(trafficEvent);
     when(trafficProcessorService.processTrafficEvent(any())).thenReturn(id);
-    this.mvc
-        .perform(post(TRAFFIC_EVENTS_API_PATH).contentType(APPLICATION_JSON).content(content))
+    mvc.perform(post(TRAFFIC_EVENTS_API_PATH).contentType(APPLICATION_JSON).content(content))
         .andExpect(status().isCreated())
         .andExpect(header().string("location", endsWith(TRAFFIC_EVENTS_API_PATH + "/" + id)));
   }
@@ -50,8 +51,7 @@ public class RestTrafficProcessorControllerTest extends PresentationRestTest {
     var trafficEvent = Instancio.create(RestTrafficEvent.class);
     var content = toJson(trafficEvent);
     doThrow(IllegalStateException.class).when(trafficProcessorService).processTrafficEvent(any());
-    this.mvc
-        .perform(
+    mvc.perform(
             post(TRAFFIC_EVENTS_API_PATH)
                 .header(ACCEPT_LANGUAGE, "sl")
                 .contentType(APPLICATION_JSON)
@@ -62,18 +62,95 @@ public class RestTrafficProcessorControllerTest extends PresentationRestTest {
   }
 
   @Test
-  void givenTrafficEventId_WhenRetrievingEvent_ThenResponseIsEqualToValueReturnedFromService()
+  void givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenProblemIsReturned()
+      throws Exception {
+    when(trafficProcessorService.processTrafficEvent(any())).thenCallRealMethod();
+    var trafficEventWithNullvehicleId =
+        Instancio.of(RestTrafficEvent.class).set(field("vehicleId"), null).create();
+    var content = toJson(trafficEventWithNullvehicleId);
+    mvc.perform(
+            post(TRAFFIC_EVENTS_API_PATH)
+                .header(ACCEPT_LANGUAGE, "sl")
+                .contentType(APPLICATION_JSON)
+                .content(content))
+        .andExpect(status().is(500))
+        .andExpect(jsonPath("$.title").value(startsWith("Exception ID:")))
+        .andExpect(jsonPath("$.detail").value(startsWith("Ups, nekaj je šlo narobe...")));
+
+    var trafficEventWithShortVehicleId =
+        Instancio.of(RestTrafficEvent.class)
+            .generate(field("vehicleId"), gen -> gen.string().maxLength(2))
+            .create();
+    content = toJson(trafficEventWithShortVehicleId);
+    mvc.perform(
+            post(TRAFFIC_EVENTS_API_PATH)
+                .header(ACCEPT_LANGUAGE, "sl")
+                .contentType(APPLICATION_JSON)
+                .content(content))
+        .andExpect(status().is(500))
+        .andExpect(jsonPath("$.title").value(startsWith("Exception ID:")))
+        .andExpect(jsonPath("$.detail").value(startsWith("Ups, nekaj je šlo narobe...")));
+  }
+
+  @Test
+  void givenTrafficEventWithInvalidVehicleBrand_WhenProcessing_ThenProblemIsReturned()
+      throws Exception {
+    when(trafficProcessorService.processTrafficEvent(any())).thenCallRealMethod();
+    var trafficEvent =
+        Instancio.of(RestTrafficEvent.class).set(field("vehicleBrand"), null).create();
+    var content = toJson(trafficEvent);
+
+    mvc.perform(
+            post(TRAFFIC_EVENTS_API_PATH)
+                .header(ACCEPT_LANGUAGE, "sl")
+                .contentType(APPLICATION_JSON)
+                .content(content))
+        .andExpect(status().is(500))
+        .andExpect(jsonPath("$.title").value(startsWith("Exception ID:")))
+        .andExpect(jsonPath("$.detail").value(startsWith("Ups, nekaj je šlo narobe...")));
+  }
+
+  @Test
+  void givenTrafficEventWithInvalidTimestamp_WhenProcessing_ThenProblemIsReturned()
+      throws Exception {
+    when(trafficProcessorService.processTrafficEvent(any())).thenCallRealMethod();
+    var trafficEvent =
+        Instancio.of(RestTrafficEvent.class)
+            .generate(field("timestamp"), gen -> gen.longs().max(-1l))
+            .create();
+    var content = toJson(trafficEvent);
+
+    mvc.perform(
+            post(TRAFFIC_EVENTS_API_PATH)
+                .header(ACCEPT_LANGUAGE, "sl")
+                .contentType(APPLICATION_JSON)
+                .content(content))
+        .andExpect(status().is(500))
+        .andExpect(jsonPath("$.title").value(startsWith("Exception ID:")))
+        .andExpect(jsonPath("$.detail").value(startsWith("Ups, nekaj je šlo narobe...")));
+  }
+
+  @Test
+  void givenValidTrafficEventId_WhenRetrievingEvent_ThenResponseIsEqualToValueReturnedFromService()
       throws Exception {
     var trafficEvent = Instancio.create(RestRecordedTrafficEvent.class);
     var id = trafficEvent.getId();
     when(trafficProcessorService.retrieveTrafficEvent(any(), any())).thenReturn(trafficEvent);
-    this.mvc
-        .perform(get(TRAFFIC_EVENTS_RESOURCE_PATH, id).header(ACCEPT_LANGUAGE, "sl"))
+    mvc.perform(get(TRAFFIC_EVENTS_RESOURCE_PATH, id).header(ACCEPT_LANGUAGE, "sl"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(trafficEvent.getId()))
         .andExpect(jsonPath("$.vehicleId").value(trafficEvent.getVehicleId()))
         .andExpect(jsonPath("$.vehicleBrand").value(trafficEvent.getVehicleBrand().name()))
         .andExpect(jsonPath("$.timestamp").value(trafficEvent.getTimestamp()));
+  }
+
+  @Test
+  void whenRetrieveingTrafficEventByInvalidId_ThenProblemIsReturned() throws Exception {
+    when(trafficProcessorService.retrieveTrafficEvent(any(), any())).thenCallRealMethod();
+    mvc.perform(get(TRAFFIC_EVENTS_RESOURCE_PATH, randomString(2)).header(ACCEPT_LANGUAGE, "sl"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.title").value(startsWith("Exception ID:")))
+        .andExpect(jsonPath("$.detail").value(startsWith("Neveljavn ID vozila")));
   }
 
   @Test
@@ -87,8 +164,7 @@ public class RestTrafficProcessorControllerTest extends PresentationRestTest {
     when(trafficProcessorService.retrieveTrafficStats(any(), any(), any()))
         .thenReturn(trafficStats);
     var result =
-        this.mvc
-            .perform(
+        mvc.perform(
                 get(TRAFFIC_STATS_PATH)
                     .header(ACCEPT_LANGUAGE, "sl")
                     .param("timeWindowFrom", timeWindowFrom.toString())

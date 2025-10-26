@@ -2,10 +2,15 @@ package com.example.traficprocessor.adapter.presentation.rest;
 
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.OPEN_API_DESCRIPTION;
 import static com.example.traficprocessor.adapter.presentation.rest.RestPresentationConstants.OPEN_API_TITLE;
+import static com.example.traficprocessor.core.domain.exception.ServiceExceptionStatus.BAD_REQUST;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
 import static io.swagger.v3.oas.models.security.SecurityScheme.In.HEADER;
 import static io.swagger.v3.oas.models.security.SecurityScheme.Type.OAUTH2;
 
 import com.example.traficprocessor.adapter.presentation.rest.observability.RequestLoggingFilter;
+import com.example.traficprocessor.adapter.spring.commons.exception.ServiceExceptionAdvisor;
+import com.example.traficprocessor.core.domain.exception.ServiceException;
+import com.example.traficprocessor.core.model.TrafficEvent;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -20,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
@@ -62,5 +68,19 @@ public class RestPresentationConfig {
     var resolver = new AcceptHeaderLocaleResolver();
     resolver.setDefaultLocale(Locale.US);
     return resolver;
+  }
+
+  @ServiceExceptionAdvisor
+  ServiceException translateAuthenticationException(MethodArgumentNotValidException exception) {
+    var target = exception.getBindingResult().getTarget();
+    if (target instanceof TrafficEvent trafficEvent) {
+      var vehicleId = trafficEvent.getVehicleId();
+      var vehicleBrand = trafficEvent.getVehicleBrand();
+      var timestamp = trafficEvent.getTimestamp();
+      var message = INVALID_TRAFFIC_EVENT_MESSAGE.toMessage(vehicleId, vehicleBrand, timestamp);
+      return new ServiceException(exception, BAD_REQUST, message);
+    } else {
+      return null;
+    }
   }
 }

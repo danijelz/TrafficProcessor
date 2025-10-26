@@ -2,6 +2,8 @@ package com.example.traficprocessor.core.domain;
 
 import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TIME_PERIOD_MESSAGE;
 import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_TRAFFIC_EVENT_MESSAGE;
+import static com.example.traficprocessor.core.domain.i18n.DomainI18nInfoConstants.INVALID_VEHICLE_ID_MESSAGE;
+import static com.example.traficprocessor.core.domain.utils.Randoms.randomString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.instancio.Select.field;
@@ -150,6 +152,25 @@ public class TrafficProcessorServiceTest {
   }
 
   @Test
+  void whenRetrieveingTrafficEventByInvalidId_ThenServiceExceptionIsThrown() {
+    var trafficProcessorRepository = mock(TrafficEventRepository.class);
+    var trafficProcessorService = new TrafficProcessorService(null, trafficProcessorRepository);
+
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(
+            () -> trafficProcessorService.retrieveTrafficEvent(null, StubRecordedTrafficEvent::new))
+        .returns(INVALID_VEHICLE_ID_MESSAGE.code(), ex -> ex.getDescription().code());
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(
+            () ->
+                trafficProcessorService.retrieveTrafficEvent(
+                    randomString(2), StubRecordedTrafficEvent::new))
+        .returns(INVALID_VEHICLE_ID_MESSAGE.code(), ex -> ex.getDescription().code());
+
+    verify(trafficProcessorRepository, never()).retrieveTrafficEvent(any(), any());
+  }
+
+  @Test
   void
       givenValidYearMonthPeriod_WhenRetrieveingTrafficStats_ThenRepositoryIsInvokedAndResultIsValid() {
     var trafficProcessorRepository = mock(TrafficEventRepository.class);
@@ -182,6 +203,20 @@ public class TrafficProcessorServiceTest {
             () ->
                 trafficProcessorService.retrieveTrafficStats(
                     timeWindowFrom, timeWindowTo, StubTraficStatsFactory.INSTANCE))
+        .returns(INVALID_TIME_PERIOD_MESSAGE.code(), ex -> ex.getDescription().code());
+
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(
+            () ->
+                trafficProcessorService.retrieveTrafficStats(
+                    null, timeWindowTo, StubTraficStatsFactory.INSTANCE))
+        .returns(INVALID_TIME_PERIOD_MESSAGE.code(), ex -> ex.getDescription().code());
+
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(
+            () ->
+                trafficProcessorService.retrieveTrafficStats(
+                    timeWindowFrom, null, StubTraficStatsFactory.INSTANCE))
         .returns(INVALID_TIME_PERIOD_MESSAGE.code(), ex -> ex.getDescription().code());
   }
 }

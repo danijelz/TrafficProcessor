@@ -18,13 +18,13 @@ class DeduplicationProcessor
 
   DeduplicationProcessor(String storeName, long expirationInSeconds) {
     this.storeName = storeName;
-    searchWindowMs = (expirationInSeconds * 1000 / 2) + 1;
+    searchWindowMs = expirationInSeconds * 1000;
   }
 
   @Override
   public void init(ProcessorContext<String, KafkaTrafficEvent> context) {
     this.context = context;
-    eventIdStore = context.getStateStore(storeName);
+    this.eventIdStore = context.getStateStore(storeName);
   }
 
   @Override

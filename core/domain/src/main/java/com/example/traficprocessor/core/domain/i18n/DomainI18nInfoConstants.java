@@ -8,8 +8,10 @@ public interface DomainI18nInfoConstants {
       of(
           "DOMAIN-002",
           """
-          Invalid TrafficEvent(%s, %s, %s}, required; vehicleId.length >= 0, \
-          vehicleBrand != null, timestamp ?= 0.""");
+          Invalid TrafficEvent(%s, %s, %s}, required; vehicleId.length >= 3, \
+          vehicleBrand != null, timestamp >= 0.""");
+  I18nMessageConstant INVALID_VEHICLE_ID_MESSAGE =
+      of("DOMAIN-003", "Invalid vehicleId '%s', required; vehicleId.length >= 3");
   I18nMessageConstant INVALID_TIME_PERIOD_MESSAGE =
-      of("DOMAIN-003", "Invalid time period [%s, %s], 'from' must be before 'to'.");
+      of("DOMAIN-004", "Invalid time period [%s, %s], 'from' must be before 'to'.");
 }

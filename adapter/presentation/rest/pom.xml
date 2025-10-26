@@ -58,6 +58,13 @@
 
 		<dependency>
 			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-core-domain</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
 			<artifactId>trafic-processor-adapter-spring-commons</artifactId>
 		</dependency>
 	</dependencies>
