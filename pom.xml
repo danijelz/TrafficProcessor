@@ -416,6 +416,11 @@
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
+						<configuration>
+							<includes>
+								<include>com/example/traficprocessor/**</include>
+							</includes>
+						</configuration>
 						<executions>
 							<execution>
 								<id>prepare-agent</id>
