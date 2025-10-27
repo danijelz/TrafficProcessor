@@ -13,8 +13,7 @@ public class IndexControllerTest extends PresentationRestTest {
   @Test
   void givenRequestToIndex_WhenProcessed_ThenResponseContainsRedirectionToSwagger()
       throws Exception {
-    this.mvc
-        .perform(get(INDEX_PATH))
+    mvc.perform(get(INDEX_PATH))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(SWAGGER_INDEX_PATH));
   }

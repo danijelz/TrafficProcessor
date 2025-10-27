@@ -3,20 +3,24 @@ package com.example.traficprocessor.adapter.kafka;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATED_TRAFFIC_EVENTS_TOPIC;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATION_STORE_NAME;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.TRAFFIC_EVENTS_TOPIC;
+import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.streams.StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG;
 import static org.apache.kafka.streams.state.Stores.persistentWindowStore;
 import static org.apache.kafka.streams.state.Stores.windowStoreBuilder;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.kafka.retrytopic.TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE;
+import static org.springframework.kafka.streams.RecoveringDeserializationExceptionHandler.KSTREAM_DESERIALIZATION_RECOVERER;
 
 import com.example.traficprocessor.adapter.kafka.observability.KafkaListenerTracer;
 import com.example.traficprocessor.core.domain.TrafficProcessorService;
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.validation.ValidationException;
 import java.time.Duration;
+import java.util.Map;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Produced;
 import org.slf4j.Logger;
@@ -35,8 +39,13 @@ import org.springframework.kafka.annotation.KafkaListenerConfigurer;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistrar;
+import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.streams.RecoveringDeserializationExceptionHandler;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.validation.annotation.Validated;
@@ -45,7 +54,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @EnableKafkaStreams
 @Configuration(proxyBeanMethods = false)
 @PropertySource("classpath:kafka.properties")
-@RegisterReflectionForBinding(LogAndContinueExceptionHandler.class)
+@RegisterReflectionForBinding(RecoveringDeserializationExceptionHandler.class)
 public class KafkaConfig implements KafkaListenerConfigurer {
   private static final Logger LOGGER = getLogger(KafkaConfig.class.getName() + ".KafkaListener");
 
@@ -71,6 +80,24 @@ public class KafkaConfig implements KafkaListenerConfigurer {
     factory.getContainerProperties().setObservationEnabled(true);
     factory.setConsumerFactory(consumerFactory);
     return factory;
+  }
+
+  @Autowired
+  void configureStreamRecoverer(
+      KafkaStreamsConfiguration kafkaStreamsConfiguration, ProducerFactory<?, ?> producerFactory) {
+    var properties = kafkaStreamsConfiguration.asProperties();
+    properties.put(
+        DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG,
+        RecoveringDeserializationExceptionHandler.class);
+    properties.put(KSTREAM_DESERIALIZATION_RECOVERER, createRecoverer(producerFactory));
+  }
+
+  private DeadLetterPublishingRecoverer createRecoverer(ProducerFactory<?, ?> producerFactory) {
+    var template =
+        new KafkaTemplate<>(
+            producerFactory,
+            Map.of(VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName()));
+    return new DeadLetterPublishingRecoverer(template);
   }
 
   @Bean
