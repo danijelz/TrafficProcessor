@@ -3,6 +3,7 @@ package com.example.traficprocessor.adapter.kafka;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATED_TRAFFIC_EVENTS_DLT_TOPIC;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATED_TRAFFIC_EVENTS_RETRY_TOPIC;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.DEDUPLICATED_TRAFFIC_EVENTS_TOPIC;
+import static com.example.traficprocessor.adapter.kafka.KafkaConstants.TRAFFIC_EVENTS_DLT_TOPIC;
 import static com.example.traficprocessor.adapter.kafka.KafkaConstants.TRAFFIC_EVENTS_TOPIC;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomInt;
 import static com.example.traficprocessor.core.domain.utils.Randoms.randomString;
@@ -12,6 +13,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.stream.IntStream.range;
 import static java.util.stream.StreamSupport.stream;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
+import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.greaterThan;
@@ -24,17 +26,21 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 import com.example.traficprocessor.core.domain.TrafficProcessorService;
 import com.example.traficprocessor.core.domain.exception.ServiceException;
+import com.example.traficprocessor.core.domain.utils.Values;
 import com.example.traficprocessor.core.model.TrafficEvent;
 import java.util.ArrayList;
+import java.util.Map;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
@@ -47,6 +53,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
     partitions = 1,
     topics = {
       TRAFFIC_EVENTS_TOPIC,
+      TRAFFIC_EVENTS_DLT_TOPIC,
       DEDUPLICATED_TRAFFIC_EVENTS_TOPIC,
       DEDUPLICATED_TRAFFIC_EVENTS_RETRY_TOPIC,
       DEDUPLICATED_TRAFFIC_EVENTS_DLT_TOPIC
@@ -57,6 +64,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 public class TrafficEventListenerTest {
   @Autowired private EmbeddedKafkaBroker embeddedKafkaBroker;
   @Autowired private KafkaTemplate<String, Object> kafkaTemplate;
+  @Autowired private ProducerFactory<?, ?> producerFactory;
   @MockitoBean private TrafficProcessorService trafficProcessorService;
 
   @Test
@@ -146,6 +154,31 @@ public class TrafficEventListenerTest {
               TRAFFIC_EVENTS_TOPIC,
               DEDUPLICATED_TRAFFIC_EVENTS_TOPIC,
               DEDUPLICATED_TRAFFIC_EVENTS_DLT_TOPIC);
+    }
+  }
+
+  @Test
+  void
+      givenMalformedTrafficEvent_WhenSentToTrafficEventsTopic_ThenTrafficEventIsPassedToDltHandler() {
+    var template =
+        new KafkaTemplate<>(
+            producerFactory,
+            Map.of(VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName()));
+    template.send(TRAFFIC_EVENTS_TOPIC, Values.cast(randomString()));
+
+    var consumerProps = consumerProps(getClass().getName(), "true", embeddedKafkaBroker);
+    consumerProps.put(AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+    var stringDeserializer = new StringDeserializer();
+    var factory =
+        new DefaultKafkaConsumerFactory<>(consumerProps, stringDeserializer, stringDeserializer);
+
+    try (var consumer = factory.createConsumer()) {
+      embeddedKafkaBroker.consumeFromAllEmbeddedTopics(consumer);
+      var records = getRecords(consumer, ofSeconds(10), 2);
+      var topics = stream(records.spliterator(), false).map(ConsumerRecord::topic).toList();
+
+      assertThat(topics).containsExactlyInAnyOrder(TRAFFIC_EVENTS_TOPIC, TRAFFIC_EVENTS_DLT_TOPIC);
     }
   }
 

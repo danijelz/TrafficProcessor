@@ -5,6 +5,7 @@ import static org.springframework.kafka.retrytopic.RetryTopicConstants.DEFAULT_R
 
 interface KafkaConstants {
   String TRAFFIC_EVENTS_TOPIC = "trafficEvents";
+  String TRAFFIC_EVENTS_DLT_TOPIC = TRAFFIC_EVENTS_TOPIC + DEFAULT_DLT_SUFFIX;
   String DEDUPLICATION_STORE_NAME = "trafficEventDeduplicationStore";
   String DEDUPLICATED_TRAFFIC_EVENTS_TOPIC = "deduplicatedTrafficEvents";
   String DEDUPLICATED_TRAFFIC_EVENTS_DLT_TOPIC =
