@@ -71,7 +71,8 @@ public class RestPresentationConfig {
   }
 
   @ServiceExceptionAdvisor
-  ServiceException translateAuthenticationException(MethodArgumentNotValidException exception) {
+  ServiceException translateMethodArgumentNotValidException(
+      MethodArgumentNotValidException exception) {
     var target = exception.getBindingResult().getTarget();
     if (target instanceof TrafficEvent trafficEvent) {
       var vehicleId = trafficEvent.getVehicleId();

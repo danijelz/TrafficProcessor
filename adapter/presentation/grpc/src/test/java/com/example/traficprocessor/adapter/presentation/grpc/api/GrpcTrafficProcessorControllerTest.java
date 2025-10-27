@@ -2,8 +2,11 @@ package com.example.traficprocessor.adapter.presentation.grpc.api;
 
 import static com.example.traficprocessor.adapter.presentation.grpc.model.GrpcVehicleBrand.forNumber;
 import static com.example.traficprocessor.adapter.presentation.grpc.model.GrpcYearMonthAdapter.toGrpcYearMonth;
+import static io.grpc.Status.INTERNAL;
+import static io.grpc.Status.INVALID_ARGUMENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.instancio.Select.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -50,15 +53,35 @@ public class GrpcTrafficProcessorControllerTest {
 
   @Test
   void
-      givenTrafficEvent_WhenProcessedUnsuccessfully_ThenResponseContainsProblemWithLocalizedDescription()
+      givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenExceptionLocalizedDescriptionIsThrown()
           throws Exception {
+    var trafficEventWithNullvehicleId =
+        Instancio.of(StubTrafficEvent.class)
+            .generate(field("vehicleId"), gen -> gen.string().maxLength(2))
+            .create();
+    var trafficEvent = toGrpcTrafficEvent(trafficEventWithNullvehicleId);
+    assertThatExceptionOfType(StatusRuntimeException.class)
+        .isThrownBy(() -> stub.processTrafficEvent(trafficEvent))
+        .extracting(StatusRuntimeException::getStatus)
+        .returns(INVALID_ARGUMENT.getCode(), Status::getCode)
+        .extracting(Status::getDescription)
+        .asString()
+        .contains("Neveljaven TrafficEvent");
+  }
+
+  @Test
+  void givenTrafficEvent_WhenProcessedUnsuccessfully_ThenExceptionLocalizedDescriptionIsThrown()
+      throws Exception {
     var stubTrafficEvent = Instancio.create(StubTrafficEvent.class);
     var trafficEvent = toGrpcTrafficEvent(stubTrafficEvent);
     doThrow(IllegalStateException.class).when(trafficProcessorService).processTrafficEvent(any());
     assertThatExceptionOfType(StatusRuntimeException.class)
         .isThrownBy(() -> stub.processTrafficEvent(trafficEvent))
         .extracting(StatusRuntimeException::getStatus)
-        .returns(Status.INTERNAL.getCode(), Status::getCode);
+        .returns(INTERNAL.getCode(), Status::getCode)
+        .extracting(Status::getDescription)
+        .asString()
+        .contains("Ups, nekaj je šlo narobe...");
   }
 
   private GrpcTrafficEvent toGrpcTrafficEvent(StubTrafficEvent stubTrafficEvent) {
