@@ -44,22 +44,6 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Traffic Processor -->
-		<dependency>
-			<groupId>com.example</groupId>
-			<artifactId>trafic-processor-core-model</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.example</groupId>
-			<artifactId>trafic-processor-core-domain</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.example</groupId>
-			<artifactId>trafic-processor-adapter-spring-commons</artifactId>
-		</dependency>
-
 		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -84,6 +68,22 @@
 			<groupId>org.springframework.grpc</groupId>
 			<artifactId>spring-grpc-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Traffic Processor -->
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-core-model</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-core-domain</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>trafic-processor-adapter-spring-commons</artifactId>
 		</dependency>
 	</dependencies>
 
