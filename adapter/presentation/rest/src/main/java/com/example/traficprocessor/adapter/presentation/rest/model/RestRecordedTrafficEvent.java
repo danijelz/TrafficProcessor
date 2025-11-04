@@ -4,7 +4,7 @@ import com.example.traficprocessor.core.model.RecordedTrafficEvent;
 import com.example.traficprocessor.core.model.VehicleBrand;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(name = "RecordedTrafficEvent", description = "RecordedTrafficEvent description")
+@Schema(name = "RecordedTrafficEvent", description = "Identifiable instance of TrafficEvent")
 public class RestRecordedTrafficEvent implements RecordedTrafficEvent {
   private String id;
   private String vehicleId;
@@ -22,7 +22,7 @@ public class RestRecordedTrafficEvent implements RecordedTrafficEvent {
   }
 
   @Override
-  @Schema(description = "RecordedTrafficEvent.id description")
+  @Schema(description = "ID of TrafficEvent")
   public String getId() {
     return id;
   }
@@ -33,7 +33,7 @@ public class RestRecordedTrafficEvent implements RecordedTrafficEvent {
   }
 
   @Override
-  @Schema(description = "RecordedTrafficEvent.vehicleId description")
+  @Schema(description = "ID of a vehicle as identified by tolling system.")
   public String getVehicleId() {
     return vehicleId;
   }
@@ -44,7 +44,7 @@ public class RestRecordedTrafficEvent implements RecordedTrafficEvent {
   }
 
   @Override
-  @Schema(description = "RecordedTrafficEvent.vehicleBrand description")
+  @Schema(description = "Brand of a vehicle as identified by tolling system.")
   public VehicleBrand getVehicleBrand() {
     return vehicleBrand;
   }
@@ -55,7 +55,7 @@ public class RestRecordedTrafficEvent implements RecordedTrafficEvent {
   }
 
   @Override
-  @Schema(description = "RecordedTrafficEvent.timestamp description")
+  @Schema(description = "Timestamp of event.")
   public long getTimestamp() {
     return timestamp;
   }

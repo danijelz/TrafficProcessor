@@ -5,7 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.YearMonth;
 import java.util.List;
 
-@Schema(name = "TrafficStats", description = "TrafficStats")
+@Schema(
+    name = "TrafficStats",
+    description = "Cumulative statistics of TrafficEvents in time window.")
 public class RestTrafficStats implements TrafficStats<RestVehicleBrandTrafficStats> {
   private YearMonth timeWindowFrom;
   private YearMonth timeWindowTo;
@@ -23,7 +25,7 @@ public class RestTrafficStats implements TrafficStats<RestVehicleBrandTrafficSta
   }
 
   @Override
-  @Schema(description = "TrafficStats.timeWindowFrom description")
+  @Schema(description = "Lower bound of the data set.")
   public YearMonth getTimeWindowFrom() {
     return timeWindowFrom;
   }
@@ -34,7 +36,7 @@ public class RestTrafficStats implements TrafficStats<RestVehicleBrandTrafficSta
   }
 
   @Override
-  @Schema(description = "TrafficStats.timeWindowTo description")
+  @Schema(description = "Upper bound of the data set.")
   public YearMonth getTimeWindowTo() {
     return timeWindowTo;
   }
@@ -45,7 +47,7 @@ public class RestTrafficStats implements TrafficStats<RestVehicleBrandTrafficSta
   }
 
   @Override
-  @Schema(description = "TrafficStats.vehicleBrandTrafficStats description")
+  @Schema(description = "Statistics by vehicle brand in time window.")
   public List<RestVehicleBrandTrafficStats> getVehicleBrandTrafficStats() {
     return vehicleBrandTrafficStats;
   }

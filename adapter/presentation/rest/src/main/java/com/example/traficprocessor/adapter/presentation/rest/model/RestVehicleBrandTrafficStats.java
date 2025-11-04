@@ -4,11 +4,14 @@ import com.example.traficprocessor.core.model.VehicleBrand;
 import com.example.traficprocessor.core.model.VehicleBrandTrafficStats;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(
+    name = "VehicleBrandTrafficStats",
+    description = "Statistic of TrafficEvents by VehicleBrand.")
 public class RestVehicleBrandTrafficStats implements VehicleBrandTrafficStats {
   private VehicleBrand vehicleBrand;
   private long numberOfCountedVehicles;
 
-  @Schema(description = "TrafficStats.timeWindowFrom description")
+  @Schema(description = "Brand of a vehicle as identified by tolling system.")
   public VehicleBrand getVehicleBrand() {
     return vehicleBrand;
   }
@@ -18,7 +21,7 @@ public class RestVehicleBrandTrafficStats implements VehicleBrandTrafficStats {
     this.vehicleBrand = vehicleBrand;
   }
 
-  @Schema(description = "TrafficStats.timeWindowFrom description")
+  @Schema(description = "Nuber of counted vehicles as reported by tolling system.")
   public long getNumberOfCountedVehicles() {
     return numberOfCountedVehicles;
   }
