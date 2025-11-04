@@ -53,7 +53,7 @@ public class GrpcTrafficProcessorControllerTest {
 
   @Test
   void
-      givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenExceptionLocalizedDescriptionIsThrown()
+      givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenExceptionWithLocalizedDescriptionIsThrown()
           throws Exception {
     var trafficEventWithNullvehicleId =
         Instancio.of(StubTrafficEvent.class)
@@ -70,7 +70,7 @@ public class GrpcTrafficProcessorControllerTest {
   }
 
   @Test
-  void givenTrafficEvent_WhenProcessedUnsuccessfully_ThenExceptionLocalizedDescriptionIsThrown()
+  void givenTrafficEvent_WhenProcessedUnsuccessfully_ThenExceptionWithLocalizedDescriptionIsThrown()
       throws Exception {
     var stubTrafficEvent = Instancio.create(StubTrafficEvent.class);
     var trafficEvent = toGrpcTrafficEvent(stubTrafficEvent);

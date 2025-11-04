@@ -62,8 +62,9 @@ public class RestTrafficProcessorControllerTest extends PresentationRestTest {
   }
 
   @Test
-  void givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenProblemIsReturned()
-      throws Exception {
+  void
+      givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenResponseContainsProblemWithLocalizedDescription()
+          throws Exception {
     when(trafficProcessorService.processTrafficEvent(any())).thenCallRealMethod();
     var trafficEventWithNullvehicleId =
         Instancio.of(RestTrafficEvent.class).set(field("vehicleId"), null).create();
@@ -93,8 +94,9 @@ public class RestTrafficProcessorControllerTest extends PresentationRestTest {
   }
 
   @Test
-  void givenTrafficEventWithInvalidVehicleBrand_WhenProcessing_ThenProblemIsReturned()
-      throws Exception {
+  void
+      givenTrafficEventWithInvalidVehicleBrand_WhenProcessing_ThenResponseContainsProblemWithLocalizedDescription()
+          throws Exception {
     when(trafficProcessorService.processTrafficEvent(any())).thenCallRealMethod();
     var trafficEvent =
         Instancio.of(RestTrafficEvent.class).set(field("vehicleBrand"), null).create();
@@ -111,8 +113,9 @@ public class RestTrafficProcessorControllerTest extends PresentationRestTest {
   }
 
   @Test
-  void givenTrafficEventWithInvalidTimestamp_WhenProcessing_ThenProblemIsReturned()
-      throws Exception {
+  void
+      givenTrafficEventWithInvalidTimestamp_WhenProcessing_ThenResponseContainsProblemWithLocalizedDescription()
+          throws Exception {
     when(trafficProcessorService.processTrafficEvent(any())).thenCallRealMethod();
     var trafficEvent =
         Instancio.of(RestTrafficEvent.class)
@@ -145,7 +148,8 @@ public class RestTrafficProcessorControllerTest extends PresentationRestTest {
   }
 
   @Test
-  void whenRetrieveingTrafficEventByInvalidId_ThenProblemIsReturned() throws Exception {
+  void whenRetrieveingTrafficEventByInvalidId_ThenResponseContainsProblemWithLocalizedDescription()
+      throws Exception {
     when(trafficProcessorService.retrieveTrafficEvent(any(), any())).thenCallRealMethod();
     mvc.perform(get(TRAFFIC_EVENTS_RESOURCE_PATH, randomString(2)).header(ACCEPT_LANGUAGE, "sl"))
         .andExpect(status().isBadRequest())

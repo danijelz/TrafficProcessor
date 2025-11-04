@@ -53,7 +53,7 @@ public class RestTrafficProcessorControllerIntegrationTest extends RestIntegrati
   }
 
   @Test
-  void givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenProblemLocalizedDescriptionIsReturned()
+  void givenTrafficEventWithInvalidVehicleId_WhenProcessing_ThenResponseContainsProblemWithLocalizedDescription()
       throws Exception {
     var trafficEventWithNullvehicleId =
         Instancio.of(RestTrafficEvent.class).set(field("vehicleId"), null).create();
@@ -83,7 +83,7 @@ public class RestTrafficProcessorControllerIntegrationTest extends RestIntegrati
   }
 
   @Test
-  void givenTrafficEventWithInvalidVehicleBrand_WhenProcessing_ThenProblemWithLocalizedDescriptionIsReturned()
+  void givenTrafficEventWithInvalidVehicleBrand_WhenProcessing_ThenResponseContainsProblemWithLocalizedDescription()
       throws Exception {
     var trafficEvent =
         Instancio.of(RestTrafficEvent.class).set(field("vehicleBrand"), null).create();
@@ -100,7 +100,7 @@ public class RestTrafficProcessorControllerIntegrationTest extends RestIntegrati
   }
 
   @Test
-  void givenTrafficEventWithInvalidTimestamp_WhenProcessing_ThenProblemLocalizedDescriptionIsReturned()
+  void givenTrafficEventWithInvalidTimestamp_WhenProcessing_ThenResponseContainsProblemWithLocalizedDescription()
       throws Exception {
     var trafficEvent =
         Instancio.of(RestTrafficEvent.class)
@@ -138,7 +138,7 @@ public class RestTrafficProcessorControllerIntegrationTest extends RestIntegrati
   }
 
   @Test
-  void givenInvalidTrafficEventId_WhenRetrieveingTrafficEventByInvalidId_ThenProblemLocalizedDescriptionIsReturned()
+  void givenInvalidTrafficEventId_WhenRetrieveingTrafficEventByInvalidId_ThenResponseContainsProblemWithLocalizedDescription()
       throws Exception {
     mvc.perform(get(TRAFFIC_EVENTS_RESOURCE_PATH, randomString(2)).header(ACCEPT_LANGUAGE, "sl"))
         .andExpect(status().isBadRequest())
